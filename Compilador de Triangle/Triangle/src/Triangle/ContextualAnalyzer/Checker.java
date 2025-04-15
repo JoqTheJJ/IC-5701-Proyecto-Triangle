@@ -91,9 +91,6 @@ public final class Checker implements Visitor {
   
   //RepeatCommand
   public Object visitRepeatCommand(RepeatCommand ast, Object o) {
-       /*
-      NO CAMBIADO == 'while'
-      */
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     if (! eType.equals(StdEnvironment.booleanType))
       reporter.reportError("Boolean expression expected here", "", ast.E.position);

@@ -169,12 +169,12 @@ public final class Encoder implements Visitor {
     Frame frame = (Frame) o;
     int loopAddr;
 
-    jumpAddr = nextInstrAddr;
     loopAddr = nextInstrAddr;
     ast.C.visit(this, frame);
     ast.E.visit(this, frame);
 
     emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
+
     return null;
   }
   

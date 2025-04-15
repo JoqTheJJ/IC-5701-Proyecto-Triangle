@@ -259,6 +259,23 @@ public class Parser {
         commandAST = new IfCommand(eAST, c1AST, c2AST, commandPos);
       }
       break;
+      
+    
+    case Token.REPEAT:
+      {
+        acceptIt();
+        commandPos = new SourcePosition();
+        start(commandPos);
+
+        Command cAST = parseSingleCommand();
+        accept(Token.UNTIL);
+        Expression eAST = parseExpression();
+        finish(commandPos);
+
+        commandAST = new RepeatCommand(eAST, cAST, commandPos); // ¡Esto es lo importante!
+      }
+      break;
+      
 
     case Token.WHILE:
       {
@@ -274,6 +291,7 @@ public class Parser {
     case Token.SEMICOLON:
     case Token.END:
     case Token.ELSE:
+    case Token.UNTIL:
     case Token.IN:
     case Token.EOT:
 
