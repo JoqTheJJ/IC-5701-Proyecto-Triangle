@@ -165,7 +165,7 @@ public final class Encoder implements Visitor {
   }
   
   //RepeatCommand
-  public Object visitRepeatCommand(WhileCommand ast, Object o) {
+  public Object visitRepeatCommand(RepeatCommand ast, Object o) {
       /*
       NO CAMBIADO == 'while'
       */
