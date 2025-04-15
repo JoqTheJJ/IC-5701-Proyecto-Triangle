@@ -71,6 +71,10 @@ import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+
+//Repeat Command
+import Triangle.AbstractSyntaxTrees.RepeatCommand;
+
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -147,6 +151,24 @@ public final class Encoder implements Visitor {
   }
 
   public Object visitWhileCommand(WhileCommand ast, Object o) {
+    Frame frame = (Frame) o;
+    int jumpAddr, loopAddr;
+
+    jumpAddr = nextInstrAddr;
+    emit(Machine.JUMPop, 0, Machine.CBr, 0);
+    loopAddr = nextInstrAddr;
+    ast.C.visit(this, frame);
+    patch(jumpAddr, nextInstrAddr);
+    ast.E.visit(this, frame);
+    emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+    return null;
+  }
+  
+  //RepeatCommand
+  public Object visitRepeatCommand(WhileCommand ast, Object o) {
+      /*
+      NO CAMBIADO == 'while'
+      */
     Frame frame = (Frame) o;
     int jumpAddr, loopAddr;
 
