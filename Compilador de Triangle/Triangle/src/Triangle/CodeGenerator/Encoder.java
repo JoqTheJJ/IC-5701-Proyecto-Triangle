@@ -166,19 +166,15 @@ public final class Encoder implements Visitor {
   
   //RepeatCommand
   public Object visitRepeatCommand(RepeatCommand ast, Object o) {
-      /*
-      NO CAMBIADO == 'while'
-      */
     Frame frame = (Frame) o;
-    int jumpAddr, loopAddr;
+    int loopAddr;
 
     jumpAddr = nextInstrAddr;
-    emit(Machine.JUMPop, 0, Machine.CBr, 0);
     loopAddr = nextInstrAddr;
     ast.C.visit(this, frame);
-    patch(jumpAddr, nextInstrAddr);
     ast.E.visit(this, frame);
-    emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+
+    emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
     return null;
   }
   
