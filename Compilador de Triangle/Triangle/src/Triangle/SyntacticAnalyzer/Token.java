@@ -124,7 +124,7 @@ final class Token extends Object {
     "case", //case
     "const",
     "do",
-    "downTo", //downTo
+    "downto", //downTo :'D
     "else",
     "end",
     "for", //for

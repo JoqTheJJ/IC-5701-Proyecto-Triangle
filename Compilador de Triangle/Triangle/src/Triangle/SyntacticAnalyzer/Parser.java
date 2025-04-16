@@ -296,7 +296,7 @@ public class Parser {
         Expression e1AST = parseExpression();
 
         int loopDirection; // 0 = to, 1 = downto
-
+        
         if (currentToken.kind == Token.TO) {
           loopDirection = 0;
           acceptIt();
