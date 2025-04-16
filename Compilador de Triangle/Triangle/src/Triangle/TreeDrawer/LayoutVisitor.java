@@ -64,6 +64,8 @@ import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 
 //RepeatCommand
 import Triangle.AbstractSyntaxTrees.RepeatCommand;
+//ForCommand
+import Triangle.AbstractSyntaxTrees.ForCommand;
 
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
@@ -128,6 +130,12 @@ public class LayoutVisitor implements Visitor {
   // RepeatCommand
   public Object visitRepeatCommand(RepeatCommand ast, Object obj) {
     return layoutBinary("RepeatCom.", ast.E, ast.C);
+  }
+  
+  // ForCommand
+  public Object visitForCommand(ForCommand ast, Object obj) {
+    String dir = (ast.Direction == 0) ? "TO" : "DOWNTO";
+    return layoutQuaternary("ForCom [" + dir + "]", ast.V, ast.E1, ast.E2, ast.C);
   }
   
   

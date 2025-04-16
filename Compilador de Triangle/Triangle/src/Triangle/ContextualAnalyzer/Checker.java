@@ -98,6 +98,29 @@ public final class Checker implements Visitor {
     return null;
   }
   
+  //ForCommand
+  public Object visitForCommand(ForCommand ast, Object o) {
+    TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
+    
+    if (!ast.V.variable)
+        reporter.reportError("Se esperaba una variable como identificador del bucle", "", ast.V.position);
+    else if (!(vType instanceof IntTypeDenoter))
+        reporter.reportError("Se esperaba un tipo entero para la variable de control", "", ast.V.position);
+
+    TypeDenoter e1Type = (TypeDenoter) ast.E1.visit(this, null);
+    if (!(e1Type instanceof IntTypeDenoter))
+        reporter.reportError("La expresión inicial del bucle debe ser de tipo entero", "", ast.E1.position);
+
+    TypeDenoter e2Type = (TypeDenoter) ast.E2.visit(this, null);
+    if (!(e2Type instanceof IntTypeDenoter))
+        reporter.reportError("La expresión final del bucle debe ser de tipo entero", "", ast.E2.position);
+
+    ast.C.visit(this, null);
+
+    return null;
+}
+
+  
   // Expressions
 
   // Returns the TypeDenoter denoting the type of the expression. Does

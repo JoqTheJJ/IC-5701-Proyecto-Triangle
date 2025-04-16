@@ -287,7 +287,35 @@ public class Parser {
         commandAST = new WhileCommand(eAST, cAST, commandPos);
       }
       break;
+    
+    case Token.FOR:
+      {
+        acceptIt();
+        Vname vAST = parseVname();
+        accept(Token.FROM);
+        Expression e1AST = parseExpression();
 
+        int loopDirection; // 0 = to, 1 = downto
+
+        if (currentToken.kind == Token.TO) {
+          loopDirection = 0;
+          acceptIt();
+        } else if (currentToken.kind == Token.DOWNTO) {
+          loopDirection = 1;
+          acceptIt();
+        } else {
+          syntacticError("Expected TO or DOWNTO", currentToken.spelling);
+          loopDirection = 0;
+        }
+
+        Expression e2AST = parseExpression();
+        accept(Token.DO);
+        Command cAST = parseSingleCommand();
+        finish(commandPos);
+        commandAST = new ForCommand(vAST, e1AST, e2AST, cAST, loopDirection, commandPos);
+      }
+      break;
+      
     case Token.SEMICOLON:
     case Token.END:
     case Token.ELSE:

@@ -72,47 +72,51 @@ final class Token extends Object {
     CASE                = 6,//case
     CONST		= 7,
     DO			= 8,
-    ELSE		= 9,
-    END			= 10,
-    FOR                 = 11,//for
-    FUNC		= 12,
-    IN			= 13,
-    LET			= 14,
-    MATCH               = 15,
-    OF			= 16,
-    OTHERWISE           = 17,//otherwise
-    PROC		= 18,
-    RECORD		= 19,
+    DOWNTO              = 9,//downto
+    ELSE		= 10,
+    END			= 11,
+    FOR                 = 12,//for
+    FROM                = 13,//from
+    FUNC		= 14,
+    IF                  = 15,
+    IN			= 16,
+    LET			= 17,
+    MATCH               = 18,
+    OF			= 19,
+    OTHERWISE           = 20,//otherwise
+    PROC		= 21,
+    RECORD		= 22,
           
-    REPEAT              = 20, //repeat
+    REPEAT              = 23, //repeat
           
-    THEN		= 21,
-    TYPE		= 22,
+    THEN		= 24,
+    TO                  = 25, //to
+    TYPE		= 26,
           
-    UNTIL               = 23, //until
+    UNTIL               = 27, //until
           
-    VAR			= 24,
-    WHILE		= 25,
+    VAR			= 28,
+    WHILE		= 29,
 
     // punctuation...
-    DOT			= 26,
-    COLON		= 27,
-    SEMICOLON           = 28,
-    COMMA		= 29,
-    BECOMES		= 30,
-    IS			= 31,
+    DOT			= 30,
+    COLON		= 31,
+    SEMICOLON           = 32,
+    COMMA		= 33,
+    BECOMES		= 34,
+    IS			= 35,
 
     // brackets...
-    LPAREN		= 32,
-    RPAREN		= 33,
-    LBRACKET	= 34,
-    RBRACKET	= 35,
-    LCURLY		= 36,
-    RCURLY		= 37,
+    LPAREN		= 36,
+    RPAREN		= 37,
+    LBRACKET	= 38,
+    RBRACKET	= 39,
+    LCURLY		= 40,
+    RCURLY		= 41,
 
     // special tokens...
-    EOT			= 38,
-    ERROR		= 39;
+    EOT			= 42,
+    ERROR		= 43;
 
   private static String[] tokenTable = new String[] {
     "<int>",
@@ -124,9 +128,11 @@ final class Token extends Object {
     "case", //case
     "const",
     "do",
+    "downTo", //downTo
     "else",
     "end",
     "for", //for
+    "from", //from
     "func",
     "if",
     "in",
@@ -139,6 +145,7 @@ final class Token extends Object {
     "repeat", //repeat
     
     "then",
+    "to", //to
     "type",
     
     "until", //until

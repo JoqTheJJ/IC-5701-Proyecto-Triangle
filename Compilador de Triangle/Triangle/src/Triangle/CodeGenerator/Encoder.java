@@ -74,6 +74,8 @@ import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 
 //Repeat Command
 import Triangle.AbstractSyntaxTrees.RepeatCommand;
+//For Command
+import Triangle.AbstractSyntaxTrees.ForCommand;
 
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
@@ -174,6 +176,45 @@ public final class Encoder implements Visitor {
     ast.E.visit(this, frame);
 
     emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, loopAddr);
+
+    return null;
+  }
+  
+  //ForCommand
+  public Object visitForCommand(ForCommand ast, Object o) {
+    Frame frame = (Frame) o;
+
+    ast.E1.visit(this, frame);
+    encodeStore(ast.V, frame, 1);
+
+    int loopStartAddr = nextInstrAddr;
+
+    encodeFetch(ast.V, frame, 1);
+    ast.E2.visit(this, frame);
+
+    if (ast.Direction == 0) { //TO
+      emit(Machine.GTop, 0, Machine.SBr, 0);
+    } else { //DOWNTO
+      emit(Machine.LTop, 0, Machine.SBr, 0);
+    }
+
+    int jumpOutAddr = nextInstrAddr;
+    emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, 9999);
+
+    ast.C.visit(this, frame);
+    encodeFetch(ast.V, frame, 1);
+
+    if (ast.Direction == 0) { //TO
+      emit(Machine.LOADLop, 0, 0, 1);
+      emit(Machine.ADDop, 0, Machine.SBr, 0);
+    } else { //DOWNTO
+      emit(Machine.LOADLop, 0, 0, 1);
+      emit(Machine.SUBop, 0, Machine.SBr, 0);
+    }
+
+    encodeStore(ast.V, frame, 1);
+    emit(Machine.JUMPop, 0, Machine.CBr, loopStartAddr);
+    patch(jumpOutAddr, nextInstrAddr);
 
     return null;
   }
