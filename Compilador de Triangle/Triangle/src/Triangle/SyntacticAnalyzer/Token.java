@@ -109,8 +109,8 @@ final class Token extends Object {
     // brackets...
     LPAREN		= 36,
     RPAREN		= 37,
-    LBRACKET	= 38,
-    RBRACKET	= 39,
+    LBRACKET	        = 38,
+    RBRACKET	        = 39,
     LCURLY		= 40,
     RCURLY		= 41,
 
@@ -137,6 +137,7 @@ final class Token extends Object {
     "if",
     "in",
     "let",
+    "match", //match
     "of",
     "otherwise", //otherwise
     "proc",
