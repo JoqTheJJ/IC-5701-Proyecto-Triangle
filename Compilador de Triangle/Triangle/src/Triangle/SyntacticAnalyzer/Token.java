@@ -86,15 +86,11 @@ final class Token extends Object {
     OTHERWISE           = 20,//otherwise
     PROC		= 21,
     RECORD		= 22,
-          
     REPEAT              = 23, //repeat
-          
     THEN		= 24,
     TO                  = 25, //to
     TYPE		= 26,
-          
-    UNTIL               = 27, //until
-          
+    UNTIL               = 27, //until 
     VAR			= 28,
     WHILE		= 29,
 
@@ -142,15 +138,11 @@ final class Token extends Object {
     "otherwise", //otherwise
     "proc",
     "record",
-    
     "repeat", //repeat
-    
     "then",
     "to", //to
     "type",
-    
     "until", //until
-    
     "var",
     "while",
     ".",

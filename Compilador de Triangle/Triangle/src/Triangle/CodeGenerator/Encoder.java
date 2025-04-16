@@ -71,12 +71,6 @@ import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
-
-//Repeat Command
-import Triangle.AbstractSyntaxTrees.RepeatCommand;
-//For Command
-import Triangle.AbstractSyntaxTrees.ForCommand;
-
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -97,6 +91,13 @@ import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.Vname;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
+
+//Repeat Command
+import Triangle.AbstractSyntaxTrees.RepeatCommand;
+//For Command
+import Triangle.AbstractSyntaxTrees.ForCommand;
+
+
 
 public final class Encoder implements Visitor {
 
