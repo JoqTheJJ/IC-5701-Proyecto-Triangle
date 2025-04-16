@@ -69,47 +69,50 @@ final class Token extends Object {
     // reserved words - must be in alphabetical order...
     ARRAY		= 4,
     BEGIN		= 5,
-    CONST		= 6,
-    DO			= 7,
-    ELSE		= 8,
-    END			= 9,
-    FUNC		= 10,
-    IF			= 11,
-    IN			= 12,
-    LET			= 13,
-    OF			= 14,
-    PROC		= 15,
-    RECORD		= 16,
+    CASE                = 6,//case
+    CONST		= 7,
+    DO			= 8,
+    ELSE		= 9,
+    END			= 10,
+    FOR                 = 11,//for
+    FUNC		= 12,
+    IN			= 13,
+    LET			= 14,
+    MATCH               = 15,
+    OF			= 16,
+    OTHERWISE           = 17,//otherwise
+    PROC		= 18,
+    RECORD		= 19,
           
-    REPEAT              = 17, //repeat
+    REPEAT              = 20, //repeat
           
-    THEN		= 18,
-    TYPE		= 19,
+    THEN		= 21,
+    TYPE		= 22,
           
-    UNTIL               = 20, //until
+    UNTIL               = 23, //until
           
-    VAR			= 21,
-    WHILE		= 22,
+    VAR			= 24,
+    WHILE		= 25,
 
     // punctuation...
-    DOT			= 23,
-    COLON		= 24,
-    SEMICOLON	= 25,
-    COMMA		= 26,
-    BECOMES		= 27,
-    IS			= 28,
+    DOT			= 26,
+    COLON		= 27,
+    SEMICOLON           = 28,
+    COMMA		= 29,
+    BECOMES		= 30,
+    IS			= 31,
 
     // brackets...
-    LPAREN		= 29,
-    RPAREN		= 30,
-    LBRACKET	= 31,
-    RBRACKET	= 32,
-    LCURLY		= 33,
-    RCURLY		= 34,
+    LPAREN		= 32,
+    RPAREN		= 33,
+    LBRACKET	= 34,
+    RBRACKET	= 35,
+    LCURLY		= 36,
+    RCURLY		= 37,
 
     // special tokens...
-    EOT			= 35,
-    ERROR		= 36;
+    EOT			= 38,
+    ERROR		= 39;
 
   private static String[] tokenTable = new String[] {
     "<int>",
@@ -118,15 +121,18 @@ final class Token extends Object {
     "<operator>",
     "array",
     "begin",
+    "case", //case
     "const",
     "do",
     "else",
     "end",
+    "for", //for
     "func",
     "if",
     "in",
     "let",
     "of",
+    "otherwise", //otherwise
     "proc",
     "record",
     
