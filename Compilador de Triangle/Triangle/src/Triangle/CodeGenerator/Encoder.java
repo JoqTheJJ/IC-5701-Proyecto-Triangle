@@ -195,9 +195,9 @@ public final class Encoder implements Visitor {
     loopAddr = nextInstrAddr;
     ast.C.visit(this, frame);
     encodeFetch(ast.V, frame, 1);
-    if (ast.Direction == 1) {
+    if (ast.Direction == 0) { //TO
         emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.succDisplacement); // v + 1
-    } else {
+    } else { //DOWNTO
         emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.predDisplacement); // v - 1
     }
     encodeStore(ast.V, new Frame(frame, 1), 1);
@@ -205,9 +205,9 @@ public final class Encoder implements Visitor {
     patch(jumpAddr, nextInstrAddr);
     encodeFetch(ast.V, frame, 1);
     ast.E2.visit(this, frame);
-    if (ast.Direction == 1) {
+    if (ast.Direction == 0) { //TO
         emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.leDisplacement); // v <= E2
-    } else {
+    } else { //DOWNTO
         emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.geDisplacement); // v >= E2
     }
 
