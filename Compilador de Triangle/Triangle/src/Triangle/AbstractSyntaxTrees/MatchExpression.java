@@ -1,3 +1,4 @@
+/*
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
@@ -11,11 +12,11 @@ public class MatchExpression extends Expression {
     O = otherwiseExpr;
   }
 
-  public Object visit(Visitor v, Object o) {
-    return v.visitMatchExpression(this, o);
-  }
+ public Object visit(Visitor v, Object o) {
+   return v.visitMatchExpression(this, o);
+ }
 
   public Expression E;
   public CaseList C;
   public Expression O;
-}
+}*/

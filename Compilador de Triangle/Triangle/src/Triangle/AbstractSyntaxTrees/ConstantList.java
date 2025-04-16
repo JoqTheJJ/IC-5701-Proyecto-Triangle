@@ -1,4 +1,4 @@
-
+/*
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
@@ -16,4 +16,4 @@ public class ConstantList extends AST {
 
   public Expression E;
   public ConstantList N;
-}
+}*/

@@ -1,4 +1,4 @@
-
+/*
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
@@ -16,4 +16,4 @@ public class CaseList extends AST {
 
   public Case C;
   public CaseList N;
-}
+}*/

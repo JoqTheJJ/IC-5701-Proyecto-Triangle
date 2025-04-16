@@ -183,42 +183,38 @@ public final class Encoder implements Visitor {
   //ForCommand
   public Object visitForCommand(ForCommand ast, Object o) {
     Frame frame = (Frame) o;
+    int jumpAddr, loopAddr;
 
     ast.E1.visit(this, frame);
-    encodeStore(ast.V, frame, 1);
+    encodeStore(ast.V, new Frame(frame, 1), 1);
 
-    int loopStartAddr = nextInstrAddr;
+    jumpAddr = nextInstrAddr;
+    emit(Machine.JUMPop, 0, Machine.CBr, 0);
 
-    encodeFetch(ast.V, frame, 1);
-    ast.E2.visit(this, frame);
-
-    if (ast.Direction == 0) { //TO
-      emit(Machine.GTop, 0, Machine.SBr, 0);
-    } else { //DOWNTO
-      emit(Machine.LTop, 0, Machine.SBr, 0);
-    }
-
-    int jumpOutAddr = nextInstrAddr;
-    emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, 9999);
-
+    loopAddr = nextInstrAddr;
     ast.C.visit(this, frame);
     encodeFetch(ast.V, frame, 1);
+    if (ast.Direction == 1) {
+        emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.succDisplacement); // v + 1
+    } else {
+        emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.predDisplacement); // v - 1
+    }
+    encodeStore(ast.V, new Frame(frame, 1), 1);
 
-    if (ast.Direction == 0) { //TO
-      emit(Machine.LOADLop, 0, 0, 1);
-      emit(Machine.ADDop, 0, Machine.SBr, 0);
-    } else { //DOWNTO
-      emit(Machine.LOADLop, 0, 0, 1);
-      emit(Machine.SUBop, 0, Machine.SBr, 0);
+    patch(jumpAddr, nextInstrAddr);
+    encodeFetch(ast.V, frame, 1);
+    ast.E2.visit(this, frame);
+    if (ast.Direction == 1) {
+        emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.leDisplacement); // v <= E2
+    } else {
+        emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.geDisplacement); // v >= E2
     }
 
-    encodeStore(ast.V, frame, 1);
-    emit(Machine.JUMPop, 0, Machine.CBr, loopStartAddr);
-    patch(jumpOutAddr, nextInstrAddr);
+    emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
 
     return null;
-  }
-  
+}
+
   // Expressions
   public Object visitArrayExpression(ArrayExpression ast, Object o) {
     ast.type.visit(this, null);

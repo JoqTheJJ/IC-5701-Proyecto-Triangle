@@ -53,6 +53,9 @@ import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 //RepeatCommand
 import Triangle.AbstractSyntaxTrees.RepeatCommand;
 
+//ForCommand
+import Triangle.AbstractSyntaxTrees.ForCommand;
+
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -148,6 +151,16 @@ public class TableVisitor implements Visitor {
   //RepeatCommand
   public Object visitRepeatCommand(RepeatCommand ast, Object o) { 
       ast.E.visit(this, null);
+      ast.C.visit(this, null);
+      
+      return(null);
+  }
+  
+  //ForCommand
+    public Object visitForCommand(ForCommand ast, Object o) { 
+      ast.V.visit(this, null);
+      ast.E1.visit(this, null);
+      ast.E2.visit(this, null);
       ast.C.visit(this, null);
       
       return(null);

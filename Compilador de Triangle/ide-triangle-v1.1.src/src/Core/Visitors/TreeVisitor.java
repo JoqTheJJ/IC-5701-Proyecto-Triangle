@@ -53,6 +53,9 @@ import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 //RepeatCommand
 import Triangle.AbstractSyntaxTrees.RepeatCommand;
 
+//ForCommand
+import Triangle.AbstractSyntaxTrees.ForCommand;
+
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -120,8 +123,14 @@ public class TreeVisitor implements Visitor {
         return(createBinary("While Command", ast.E, ast.C));
     }
     
+    //RepeatCommand
     public Object visitRepeatCommand(RepeatCommand ast, Object obj) {
         return(createBinary("Repeat Command", ast.E, ast.C));
+    }
+    
+    //ForCommand
+    public Object visitForCommand(ForCommand ast, Object obj) {
+        return(createQuaternary("For Command", ast.V,ast.E1,ast.E2,ast.C));
     }
     // </editor-fold>
     
