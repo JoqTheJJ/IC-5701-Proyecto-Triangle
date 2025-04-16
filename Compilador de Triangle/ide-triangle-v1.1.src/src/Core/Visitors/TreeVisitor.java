@@ -49,7 +49,10 @@ import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+
+//RepeatCommand
 import Triangle.AbstractSyntaxTrees.RepeatCommand;
+
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -115,6 +118,10 @@ public class TreeVisitor implements Visitor {
     
     public Object visitWhileCommand(WhileCommand ast, Object obj) {
         return(createBinary("While Command", ast.E, ast.C));
+    }
+    
+    public Object visitRepeatCommand(RepeatCommand ast, Object obj) {
+        return(createBinary("Repeat Command", ast.E, ast.C));
     }
     // </editor-fold>
     
@@ -439,8 +446,4 @@ public class TreeVisitor implements Visitor {
     }
     // </editor-fold>
 
-    @Override
-    public Object visitRepeatCommand(RepeatCommand rc, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

@@ -49,7 +49,10 @@ import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+
+//RepeatCommand
 import Triangle.AbstractSyntaxTrees.RepeatCommand;
+
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -136,6 +139,14 @@ public class TableVisitor implements Visitor {
   }
   
   public Object visitWhileCommand(WhileCommand ast, Object o) { 
+      ast.E.visit(this, null);
+      ast.C.visit(this, null);
+      
+      return(null);
+  }
+  
+  //RepeatCommand
+  public Object visitRepeatCommand(RepeatCommand ast, Object o) { 
       ast.E.visit(this, null);
       ast.C.visit(this, null);
       
@@ -624,8 +635,5 @@ public class TableVisitor implements Visitor {
     private DefaultTableModel model;
     // </editor-fold>
 
-    @Override
-    public Object visitRepeatCommand(RepeatCommand rc, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    
 }
