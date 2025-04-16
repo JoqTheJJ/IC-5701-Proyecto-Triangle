@@ -316,6 +316,8 @@ public class Parser {
       }
       break;
       
+    
+      
     case Token.SEMICOLON:
     case Token.END:
     case Token.ELSE:
@@ -375,6 +377,21 @@ public class Parser {
         expressionAST = new IfExpression(e1AST, e2AST, e3AST, expressionPos);
       }
       break;
+      
+    case Token.MATCH:
+        {
+          acceptIt();
+          Expression exprAST = parseExpression();
+          accept(Token.OF);
+          CaseList caseListAST = parseCaseList();
+          accept(Token.OTHERWISE);
+          accept(Token.COLON);
+          Expression otherwiseAST = parseExpression();
+          accept(Token.END);
+          finish(expressionPos);
+          expressionAST = new MatchExpression(exprAST, caseListAST, otherwiseAST, expressionPos);
+        }
+        break;
 
     default:
       expressionAST = parseSecondaryExpression();
@@ -484,6 +501,82 @@ public class Parser {
     }
     return expressionAST;
   }
+  
+  // ############# #############
+  // ########## CASE ###########
+  // ############# #############
+  
+  CaseList parseCaseList() throws SyntaxError {
+    SourcePosition caseListPos = new SourcePosition();
+    start(caseListPos);
+
+    Case cAST = parseCase();
+
+    CaseList listAST;
+    if (currentToken.kind == Token.CASE) {
+      CaseList rest = parseCaseList();
+      finish(caseListPos);
+      listAST = new MultipleCase(cAST, rest, caseListPos);
+    } else {
+      finish(caseListPos);
+      listAST = new SingleCase(cAST, caseListPos);
+    }
+
+    return listAST;
+  }
+  
+  Case parseCase() throws SyntaxError {
+    SourcePosition casePos = new SourcePosition();
+    start(casePos);
+
+    accept(Token.CASE);
+
+    ConstantList constsAST = parseConstantList();
+
+    accept(Token.COLON);
+    Expression exprAST = parseExpression();
+
+    finish(casePos);
+    return new Case(constsAST, exprAST, casePos);
+  }
+  
+  ConstantList parseConstantList() throws SyntaxError {
+    SourcePosition constListPos = new SourcePosition();
+    start(constListPos);
+
+    Constant constAST = parseConstant();
+    ConstantList listAST;
+
+    if (currentToken.kind == Token.COMMA) {
+      acceptIt();
+      ConstantList rest = parseConstantList();
+      finish(constListPos);
+      listAST = new MultipleConstant(constAST, rest, constListPos);
+    } else {
+      finish(constListPos);
+      listAST = new SingleConstant(constAST, constListPos);
+    }
+
+    return listAST;
+  }
+  
+  Constant parseConstant() throws SyntaxError {
+  Constant constAST = null;
+
+  if (currentToken.kind == Token.INTLITERAL) {
+    constAST = new IntegerLiteral(currentToken.spelling, currentToken.position);
+    acceptIt();
+  } else if (currentToken.kind == Token.TRUE || currentToken.kind == Token.FALSE) {
+    constAST = new BooleanLiteral(currentToken.spelling, currentToken.position);
+    acceptIt();
+  } else {
+    syntacticError("Expected a constant (integer or boolean)", currentToken.spelling);
+  }
+
+  return constAST;
+}
+  
+  
 
   RecordAggregate parseRecordAggregate() throws SyntaxError {
     RecordAggregate aggregateAST = null; // in case there's a syntactic error

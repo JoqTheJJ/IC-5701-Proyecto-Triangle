@@ -1,4 +1,4 @@
-/*
+
 package Triangle.AbstractSyntaxTrees;
 
 import Triangle.SyntacticAnalyzer.SourcePosition;
@@ -19,4 +19,4 @@ public class MatchExpression extends Expression {
   public Expression E;
   public CaseList C;
   public Expression O;
-}*/
+}
