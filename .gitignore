@@ -8,3 +8,5 @@ Compilador de Triangle/ide-triangle-v1.1.src/nbproject/private/private.propertie
 Compilador de Triangle/ide-triangle-v1.1.src/nbproject/private/private.properties
 Compilador de Triangle/Triangle/nbproject/private/private.properties
 Compilador de Triangle/Triangle/nbproject/private/private.properties
+*.xml
+/Compilador de Triangle/ide-triangle-v1.1.src/build/
