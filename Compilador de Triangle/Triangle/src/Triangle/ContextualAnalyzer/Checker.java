@@ -168,6 +168,29 @@ public final class Checker implements Visitor {
   public Object visitCaseList(CaseList ast, Object o) {
       return "Not implemented";
   }
+  
+  //LiteralExpression
+  public Object visitLiteralExpression(LiteralExpression ast, Object o) {
+    switch (ast.literalKind) {
+      case Token.INTLITERAL:
+        return StandardEnvironment.integerType;
+
+      case Token.IDENTIFIER:
+        if (ast.spelling.equals("true") || ast.spelling.equals("false")) {
+          return StandardEnvironment.booleanType;
+        }
+        // Por si acaso: no debería pasar, ya que solo aceptamos "true"/"false" como constantes
+        reporter.reportError("Unknown constant identifier \"%\"", ast.spelling, ast.position);
+        return StandardEnvironment.errorType;
+
+      default:
+        reporter.reportError("Unknown literal kind", "", ast.position);
+        return StandardEnvironment.errorType;
+    }
+  }
+
+  
+  
   /*
   public Object visitCaseList(CaseList ast, Object o) {
     TypeDenoter exprType = (TypeDenoter) ast.C.visit(this, null);

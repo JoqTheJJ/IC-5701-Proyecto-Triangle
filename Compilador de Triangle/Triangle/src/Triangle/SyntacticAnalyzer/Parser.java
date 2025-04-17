@@ -272,7 +272,7 @@ public class Parser {
         Expression eAST = parseExpression();
         finish(commandPos);
 
-        commandAST = new RepeatCommand(eAST, cAST, commandPos); // ¡Esto es lo importante!
+        commandAST = new RepeatCommand(eAST, cAST, commandPos);
       }
       break;
       
@@ -335,7 +335,6 @@ public class Parser {
     case Token.SEMICOLON:
     case Token.END:
     case Token.ELSE:
-    case Token.UNTIL:
     case Token.IN:
     case Token.EOT:
 
@@ -570,12 +569,13 @@ public class Parser {
   Expression parseConstant() throws SyntaxError {
     Expression constAST = null;
 
-    if (currentToken.kind == Token.INTLITERAL || 
-        currentToken.kind == Token.TRUE || 
-        currentToken.kind == Token.FALSE) {
+    if (currentToken.kind == Token.INTLITERAL) {
+      constAST = new LiteralExpression(currentToken.spelling, currentToken.position);
+      acceptIt();
 
-      Literal lit = new Literal(currentToken.spelling, currentToken.position);
-      constAST = new LiteralExpr(lit, currentToken.position);
+    } else if (currentToken.kind == Token.IDENTIFIER &&
+                 (currentToken.spelling.equals("true") || currentToken.spelling.equals("false"))) {
+      constAST = new LiteralExpression(currentToken.spelling, currentToken.position);
       acceptIt();
 
     } else {
@@ -583,7 +583,7 @@ public class Parser {
     }
 
     return constAST;
-}
+  }
   
   
 
