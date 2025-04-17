@@ -525,17 +525,11 @@ public class Parser {
     start(caseListPos);
 
     Case cAST = parseCase();
+    CaseList rest = null;
     if (currentToken.kind == Token.CASE) {
-      CaseList rest = parseCaseList();
-      finish(caseListPos);
-      listAST = new MultipleCase(cAST, rest, caseListPos);
-    } else {
-      finish(caseListPos);
-      listAST = new SingleCase(cAST, caseListPos);
       rest = parseCaseList();
     }
 
-    return listAST;
     finish(caseListPos);
     return new CaseList(cAST, rest, caseListPos);
   }
@@ -560,39 +554,18 @@ public class Parser {
     SourcePosition constListPos = new SourcePosition();
     start(constListPos);
 
-    Constant constAST = parseConstant();
-    ConstantList listAST;
     Expression constAST = parseConstant();
     ConstantList rest = null;
 
     if (currentToken.kind == Token.COMMA) {
       acceptIt();
-      ConstantList rest = parseConstantList();
-      finish(constListPos);
-      listAST = new MultipleConstant(constAST, rest, constListPos);
-    } else {
-      finish(constListPos);
-      listAST = new SingleConstant(constAST, constListPos);
       rest = parseConstantList();
     }
 
-    return listAST;
     finish(constListPos);
     return new ConstantList(constAST, rest, constListPos);
   }
  
-  Constant parseConstant() throws SyntaxError {
-  Constant constAST = null;
-
-  if (currentToken.kind == Token.INTLITERAL) {
-    constAST = new IntegerLiteral(currentToken.spelling, currentToken.position);
-    acceptIt();
-  } else if (currentToken.kind == Token.TRUE || currentToken.kind == Token.FALSE) {
-    constAST = new BooleanLiteral(currentToken.spelling, currentToken.position);
-    acceptIt();
-  } else {
-    syntacticError("Expected a constant (integer or boolean)", currentToken.spelling);
-  }
   
   Expression parseConstant() throws SyntaxError {
     Expression constAST = null;
@@ -609,7 +582,6 @@ public class Parser {
       syntacticError("Expected a constant (integer or boolean)", currentToken.spelling);
     }
 
-  return constAST;
     return constAST;
 }
   
