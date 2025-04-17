@@ -169,14 +169,8 @@ public class LayoutVisitor implements Visitor {
   
   // ConstantList
   public Object visitConstantList(ConstantList ast, Object obj) {
-    return layoutBinary("Case.", ast.E, ast.N);
+    return layoutBinary("ConstantList.", ast.E, ast.N);
   }
-  
-  // ConstantList
-  public Object visitConstantList(ConstantList ast, Object obj) {
-    return layoutBinary("Case.", ast.E, ast.N);
-  }
-  
   
   
   

@@ -171,22 +171,24 @@ public final class Checker implements Visitor {
   
   //LiteralExpression
   public Object visitLiteralExpression(LiteralExpression ast, Object o) {
-    switch (ast.literalKind) {
-      case Token.INTLITERAL:
-        return StandardEnvironment.integerType;
+    String value = ast.spelling;
 
-      case Token.IDENTIFIER:
-        if (ast.spelling.equals("true") || ast.spelling.equals("false")) {
-          return StandardEnvironment.booleanType;
-        }
-        // Por si acaso: no debería pasar, ya que solo aceptamos "true"/"false" como constantes
-        reporter.reportError("Unknown constant identifier \"%\"", ast.spelling, ast.position);
-        return StandardEnvironment.errorType;
-
-      default:
-        reporter.reportError("Unknown literal kind", "", ast.position);
-        return StandardEnvironment.errorType;
+    // Si es un número entero válido
+    try {
+      Integer.parseInt(value);
+      return StandardEnvironment.integerType;
+    } catch (NumberFormatException e) {
+      // No era un número, seguimos revisando
     }
+
+    // Si es un booleano válido
+    if (value.equals("true") || value.equals("false")) {
+      return StandardEnvironment.booleanType;
+    }
+
+    // Si no es ni entero ni booleano, reportamos error
+    reporter.reportError("Unknown constant \"%\"", value, ast.position);
+    return StandardEnvironment.errorType;
   }
 
   
