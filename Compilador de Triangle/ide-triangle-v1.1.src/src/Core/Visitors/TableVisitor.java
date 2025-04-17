@@ -56,6 +56,9 @@ import Triangle.AbstractSyntaxTrees.RepeatCommand;
 //ForCommand
 import Triangle.AbstractSyntaxTrees.ForCommand;
 
+//GetCharCommand
+import Triangle.AbstractSyntaxTrees.GetCharCommand;
+
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -164,6 +167,12 @@ public class TableVisitor implements Visitor {
       ast.C.visit(this, null);
       
       return(null);
+  }
+    
+  //GetCharCommand
+    public Object visitGetCharCommand(GetCharCommand ast, Object o){
+      ast.V.visit(this, null);
+      return null;
   }
   // </editor-fold>
 

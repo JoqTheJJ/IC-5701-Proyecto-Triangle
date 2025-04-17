@@ -56,6 +56,9 @@ import Triangle.AbstractSyntaxTrees.RepeatCommand;
 //ForCommand
 import Triangle.AbstractSyntaxTrees.ForCommand;
 
+//GetCharCommand
+import Triangle.AbstractSyntaxTrees.GetCharCommand;
+
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -131,6 +134,10 @@ public class TreeVisitor implements Visitor {
     //ForCommand
     public Object visitForCommand(ForCommand ast, Object obj) {
         return(createQuaternary("For Command", ast.V,ast.E1,ast.E2,ast.C));
+    }
+    
+    public Object visitGetCharCommand(GetCharCommand ast, Object o) {
+       return createUnary("Get Char Command", ast.V);
     }
     // </editor-fold>
     

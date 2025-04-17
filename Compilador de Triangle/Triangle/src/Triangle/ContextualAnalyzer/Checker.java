@@ -120,6 +120,15 @@ public final class Checker implements Visitor {
     return null;
 }
 
+  //GetCharCommand
+  public Object visitGetCharCommand(GetCharCommand ast, Object o) {
+    TypeDenoter varType = (TypeDenoter) ast.V.visit(this, null);
+    if (!ast.V.variable)
+        reporter.reportError("Expected a variable", "", ast.V.position);
+    if (!(varType instanceof CharTypeDenoter))
+        reporter.reportError("Expected variable of type Char", "", ast.V.position);
+    return null;
+}
   
   // Expressions
 

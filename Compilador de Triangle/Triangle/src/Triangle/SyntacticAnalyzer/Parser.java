@@ -316,7 +316,21 @@ public class Parser {
       }
       break;
       
-    
+    case Token.GETCHAR:
+      {
+      acceptIt();
+      accept(Token.LPAREN);
+      if (currentToken.kind == Token.VAR) {
+        accept(Token.VAR);
+       }
+
+      Vname vAST = parseVname();
+
+      accept(Token.RPAREN);
+      finish(commandPos);
+      commandAST = new GetCharCommand(vAST, commandPos);
+      }
+      break;
       
     case Token.SEMICOLON:
     case Token.END:
@@ -377,7 +391,7 @@ public class Parser {
         expressionAST = new IfExpression(e1AST, e2AST, e3AST, expressionPos);
       }
       break;
-      
+    
     case Token.MATCH:
         {
           acceptIt();
@@ -540,6 +554,7 @@ public class Parser {
     return new Case(constsAST, exprAST, casePos);
   }
   
+
   ConstantList parseConstantList() throws SyntaxError {
     SourcePosition constListPos = new SourcePosition();
     start(constListPos);
@@ -559,7 +574,7 @@ public class Parser {
 
     return listAST;
   }
-  
+ 
   Constant parseConstant() throws SyntaxError {
   Constant constAST = null;
 

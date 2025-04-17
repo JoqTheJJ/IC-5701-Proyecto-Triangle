@@ -66,6 +66,8 @@ import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
 import Triangle.AbstractSyntaxTrees.RepeatCommand;
 //ForCommand
 import Triangle.AbstractSyntaxTrees.ForCommand;
+//GetCharCommand
+import Triangle.AbstractSyntaxTrees.GetCharCommand;
 
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
@@ -137,6 +139,11 @@ public class LayoutVisitor implements Visitor {
     String dir = (ast.Direction == 0) ? "TO" : "DOWNTO";
     return layoutQuaternary("ForCom [" + dir + "]", ast.V, ast.E1, ast.E2, ast.C);
   }
+  
+  //GetCharCommand
+  public Object visitGetCharCommand(GetCharCommand ast, Object obj) {
+    return layoutUnary("GetChar", ast.V);
+  } 
   
   
   // Expressions
