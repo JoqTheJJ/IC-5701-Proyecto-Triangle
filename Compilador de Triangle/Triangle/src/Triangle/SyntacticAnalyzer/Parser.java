@@ -525,8 +525,6 @@ public class Parser {
     start(caseListPos);
 
     Case cAST = parseCase();
-
-    CaseList listAST;
     if (currentToken.kind == Token.CASE) {
       CaseList rest = parseCaseList();
       finish(caseListPos);
@@ -534,9 +532,12 @@ public class Parser {
     } else {
       finish(caseListPos);
       listAST = new SingleCase(cAST, caseListPos);
+      rest = parseCaseList();
     }
 
     return listAST;
+    finish(caseListPos);
+    return new CaseList(cAST, rest, caseListPos);
   }
   
   Case parseCase() throws SyntaxError {
@@ -561,6 +562,8 @@ public class Parser {
 
     Constant constAST = parseConstant();
     ConstantList listAST;
+    Expression constAST = parseConstant();
+    ConstantList rest = null;
 
     if (currentToken.kind == Token.COMMA) {
       acceptIt();
@@ -570,9 +573,12 @@ public class Parser {
     } else {
       finish(constListPos);
       listAST = new SingleConstant(constAST, constListPos);
+      rest = parseConstantList();
     }
 
     return listAST;
+    finish(constListPos);
+    return new ConstantList(constAST, rest, constListPos);
   }
  
   Constant parseConstant() throws SyntaxError {
@@ -587,8 +593,24 @@ public class Parser {
   } else {
     syntacticError("Expected a constant (integer or boolean)", currentToken.spelling);
   }
+  
+  Expression parseConstant() throws SyntaxError {
+    Expression constAST = null;
+
+    if (currentToken.kind == Token.INTLITERAL || 
+        currentToken.kind == Token.TRUE || 
+        currentToken.kind == Token.FALSE) {
+
+      Literal lit = new Literal(currentToken.spelling, currentToken.position);
+      constAST = new LiteralExpr(lit, currentToken.position);
+      acceptIt();
+
+    } else {
+      syntacticError("Expected a constant (integer or boolean)", currentToken.spelling);
+    }
 
   return constAST;
+    return constAST;
 }
   
   

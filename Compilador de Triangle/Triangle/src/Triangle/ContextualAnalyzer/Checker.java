@@ -118,7 +118,91 @@ public final class Checker implements Visitor {
     ast.C.visit(this, null);
 
     return null;
-}
+  }
+  
+  //MatchExpression
+  public Object visitMatchExpression(MatchExpression ast, Object o) {
+    TypeDenoter exprType = (TypeDenoter) ast.E.visit(this, null);
+
+    TypeDenoter firstResultType = null;
+
+    CaseList caseList = ast.C;
+    while (caseList != null) {
+      Case currentCase = caseList.C;
+
+      TypeDenoter caseLiteralType = (TypeDenoter) currentCase.C.visit(this, null);
+      if (!exprType.equals(caseLiteralType)) {
+        reporter.reportError("Case constant type does not match match expression type", "", currentCase.C.position);
+      }
+
+      TypeDenoter caseResultType = (TypeDenoter) currentCase.E.visit(this, null);
+      if (firstResultType == null) {
+        firstResultType = caseResultType;
+      } else if (!firstResultType.equals(caseResultType)) {
+        reporter.reportError("All case result expressions must return the same type", "", currentCase.E.position);
+      }
+
+      caseList = caseList.N;
+    }
+
+    TypeDenoter otherwiseType = (TypeDenoter) ast.O.visit(this, null);
+    if (!firstResultType.equals(otherwiseType)) {
+      reporter.reportError("Otherwise expression must return the same type as case expressions", "", ast.O.position);
+    }
+
+    ast.type = firstResultType;
+    return ast.type;
+  }
+  
+  //ConstantList
+  public Object visitConstantList(ConstantList ast, Object o) {
+      return "Not implemented";
+  }
+  
+  //Case
+  public Object visitCase(Case ast, Object o) {
+      return "Not implemented";
+  }
+  
+  //CaseList
+  public Object visitCaseList(CaseList ast, Object o) {
+      return "Not implemented";
+  }
+  /*
+  public Object visitCaseList(CaseList ast, Object o) {
+    TypeDenoter exprType = (TypeDenoter) ast.C.visit(this, null);
+
+    TypeDenoter firstResultType = null;
+
+    CaseList caseList = ast.N;
+    while (caseList != null) {
+      Case currentCase = caseList.C;
+
+      TypeDenoter caseLiteralType = (TypeDenoter) currentCase.C.visit(this, null);
+      if (!exprType.equals(caseLiteralType)) {
+        reporter.reportError("Case constant type does not match match expression type", "", currentCase.C.position);
+      }
+
+      TypeDenoter caseResultType = (TypeDenoter) currentCase.E.visit(this, null);
+      if (firstResultType == null) {
+        firstResultType = caseResultType;
+      } else if (!firstResultType.equals(caseResultType)) {
+        reporter.reportError("All case result expressions must return the same type", "", currentCase.E.position);
+      }
+
+      caseList = caseList.N;
+    }
+
+    TypeDenoter otherwiseType = (TypeDenoter) ast.C.visit(this, null);
+    if (!firstResultType.equals(otherwiseType)) {
+      reporter.reportError("Otherwise expression must return the same type as case expressions", "", ast.O.position);
+    }
+
+    ast.type = firstResultType;
+    return ast.type;
+  }*/
+  
+  
 
   //GetCharCommand
   public Object visitGetCharCommand(GetCharCommand ast, Object o) {

@@ -68,6 +68,9 @@ import Triangle.AbstractSyntaxTrees.RepeatCommand;
 import Triangle.AbstractSyntaxTrees.ForCommand;
 //GetCharCommand
 import Triangle.AbstractSyntaxTrees.GetCharCommand;
+import Triangle.AbstractSyntaxTrees.MatchExpression;
+import Triangle.AbstractSyntaxTrees.CaseList;
+import Triangle.AbstractSyntaxTrees.ConstantList;
 
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
@@ -144,6 +147,29 @@ public class LayoutVisitor implements Visitor {
   public Object visitGetCharCommand(GetCharCommand ast, Object obj) {
     return layoutUnary("GetChar", ast.V);
   } 
+  
+  // MatchCommand
+  
+  // MatchExpression
+  public Object visitMatchExpression(MatchExpression ast, Object obj) {
+    return layoutTernary("MatchExpr.", ast.E, ast.C, ast.O);
+  
+  // CaseList
+  public Object visitCaseList(CaseList ast, Object obj) {
+    return layoutBinary("CaseList.", ast.C, ast.N);
+  
+  // Case
+  public Object visitCase(Case ast, Object obj) {
+    return layoutBinary("Case.", ast.C, ast.E);
+  }
+  
+  // ConstantList
+  public Object visitConstantList(ConstantList ast, Object obj) {
+    return layoutBinary("Case.", ast.E, ast.N);
+  }
+  
+  
+  
   
   
   // Expressions
