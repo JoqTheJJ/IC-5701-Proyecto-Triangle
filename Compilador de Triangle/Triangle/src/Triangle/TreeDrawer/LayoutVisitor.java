@@ -14,6 +14,9 @@
 
 package Triangle.TreeDrawer;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import java.awt.FontMetrics;
 
 import Triangle.AbstractSyntaxTrees.AST;
@@ -68,6 +71,10 @@ import Triangle.AbstractSyntaxTrees.RepeatCommand;
 import Triangle.AbstractSyntaxTrees.ForCommand;
 //GetCharCommand
 import Triangle.AbstractSyntaxTrees.GetCharCommand;
+//MatchCommand
+import Triangle.AbstractSyntaxTrees.Case;
+import Triangle.AbstractSyntaxTrees.Expression;
+import Triangle.AbstractSyntaxTrees.MatchCommand;
 
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
@@ -142,10 +149,54 @@ public class LayoutVisitor implements Visitor {
   
   //GetCharCommand
   public Object visitGetCharCommand(GetCharCommand ast, Object obj) {
-    return layoutUnary("GetChar", ast.V);
+    return layoutUnary("GetChar.", ast.V);
   } 
   
   // MatchCommand
+  public Object visitMatchCommand(MatchCommand ast, Object obj) {
+    DrawingTree matchTree = layoutCaption("MatchCom.");
+
+    DrawingTree exprTree = (DrawingTree) ast.E.visit(this, null);
+
+    List<DrawingTree> caseTrees = new ArrayList<>();
+
+    for (Case c : ast.C) {
+      DrawingTree caseTree = layoutCaption("Case");
+
+      List<DrawingTree> labelTrees = new ArrayList<>();
+      for (Expression label : c.cases) {
+        labelTrees.add((DrawingTree) label.visit(this, null));
+      }
+
+      DrawingTree commandTree = (DrawingTree) c.C.visit(this, null);
+
+      DrawingTree[] children = new DrawingTree[labelTrees.size() + 1];
+      for (int i = 0; i < labelTrees.size(); i++) {
+        children[i] = labelTrees.get(i);
+      }
+      children[labelTrees.size()] = commandTree;
+
+      caseTree.setChildren(children);
+      attachParent(caseTree, join(caseTree));
+      caseTrees.add(caseTree);
+    }
+
+    DrawingTree caseListTree = layoutCaption("Cases");
+    caseListTree.setChildren(caseTrees.toArray(new DrawingTree[0]));
+    attachParent(caseListTree, join(caseListTree));
+
+    DrawingTree otherwiseTree = (ast.O != null)
+      ? (DrawingTree) ast.O.visit(this, null)
+      : layoutNullary("No otherwise");
+
+    matchTree.setChildren(new DrawingTree[] {
+      exprTree,
+      caseListTree,
+      otherwiseTree
+    });
+    attachParent(matchTree, join(matchTree));
+    return matchTree;
+  }
     
   // Expressions
   public Object visitArrayExpression(ArrayExpression ast, Object obj) {

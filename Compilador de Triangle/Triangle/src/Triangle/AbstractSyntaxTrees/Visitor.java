@@ -28,10 +28,11 @@ public interface Visitor {
   public abstract Object visitRepeatCommand(RepeatCommand ast, Object o);
   // FortCommand
   public abstract Object visitForCommand(ForCommand ast, Object o);
-  
   //GetCharCommand
   public abstract Object visitGetCharCommand(GetCharCommand ast, Object o);
-  
+  //Match
+  public abstract Object visitMatchCommand(MatchCommand ast, Object o);
+
 
   // Expressions
   public abstract Object visitArrayExpression(ArrayExpression ast, Object o);

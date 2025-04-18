@@ -128,7 +128,34 @@ public final class Checker implements Visitor {
     if (!(varType instanceof CharTypeDenoter))
         reporter.reportError("Expected variable of type Char", "", ast.V.position);
     return null;
-}
+  }
+  
+  //MatchCommand
+  public Object visitMatchCommand(MatchCommand ast, Object o) {
+    TypeDenoter exprType = (TypeDenoter) ast.E.visit(this, null);
+
+    boolean validType = exprType.equals(StdEnvironment.integerType) ||
+                      exprType.equals(StdEnvironment.booleanType);
+    if (!validType) {
+      reporter.reportError("Match expression must be of type Integer or Boolean", "", ast.E.position);
+    }
+
+    for (Case c : ast.C) {
+      for (Expression labelExpr : c.cases) {
+        TypeDenoter labelType = (TypeDenoter) labelExpr.visit(this, null);
+        if (!labelType.equals(exprType)) {
+          reporter.reportError("Case label does not match match expression type", "", labelExpr.position);
+        }
+      }
+    c.C.visit(this, null);
+  }
+
+  if (ast.O != null) {
+    ast.O.visit(this, null);
+  }
+
+  return null;
+  }
   
   // Expressions
 

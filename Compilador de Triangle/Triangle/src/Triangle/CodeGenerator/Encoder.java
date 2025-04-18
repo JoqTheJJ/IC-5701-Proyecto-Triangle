@@ -19,6 +19,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import javax.swing.text.TableView.TableRow;
 
 import TAM.Instruction;
@@ -96,8 +99,12 @@ import Triangle.AbstractSyntaxTrees.WhileCommand;
 import Triangle.AbstractSyntaxTrees.RepeatCommand;
 //For Command
 import Triangle.AbstractSyntaxTrees.ForCommand;
-
+//GetChar Command
 import Triangle.AbstractSyntaxTrees.GetCharCommand;
+//Match Command
+import Triangle.AbstractSyntaxTrees.Case;
+import Triangle.AbstractSyntaxTrees.Expression;
+import Triangle.AbstractSyntaxTrees.MatchCommand;
 
 
 public final class Encoder implements Visitor {
@@ -224,7 +231,55 @@ public final class Encoder implements Visitor {
     emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.getDisplacement);
     return null;
 }
+  
+  //MatchCommand
+  public Object visitMatchCommand(MatchCommand ast, Object o) {
+    Frame frame = (Frame) o;
+    List<Integer> jumpToEndAddrs = new ArrayList<>();
 
+    ast.E.visit(this, frame);
+
+    for (Case c : ast.C) {
+      List<Integer> labelFailJumps = new ArrayList<>();
+
+      for (Expression labelExpr : c.cases) {
+        emit(Machine.LOADop, 1, Machine.STr, -1);
+
+        labelExpr.visit(this, frame);
+        emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacement);
+
+        int jumpIfFalse = nextInstrAddr;
+        emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, 0);
+        labelFailJumps.add(jumpIfFalse);
+      }
+
+      c.C.visit(this, frame);
+
+      int jumpAfterCase = nextInstrAddr;
+      emit(Machine.JUMPop, 0, Machine.CBr, 0);
+      jumpToEndAddrs.add(jumpAfterCase);
+
+      for (int addr : labelFailJumps) {
+        patch(addr, nextInstrAddr);
+      }
+    }
+
+    if (ast.O != null) {
+      ast.O.visit(this, frame);
+    }
+
+    for (int addr : jumpToEndAddrs) {
+      patch(addr, nextInstrAddr);
+    }
+
+    emit(Machine.POPop, 1, 0, 0);
+
+    return null;
+  }
+
+  
+  
+  
   // Expressions
   public Object visitArrayExpression(ArrayExpression ast, Object o) {
     ast.type.visit(this, null);
