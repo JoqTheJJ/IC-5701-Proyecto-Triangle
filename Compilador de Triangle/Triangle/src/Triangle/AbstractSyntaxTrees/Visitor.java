@@ -32,12 +32,6 @@ public interface Visitor {
   //GetCharCommand
   public abstract Object visitGetCharCommand(GetCharCommand ast, Object o);
   
-  // MatchExpression
-  public abstract Object visitMatchExpression(MatchExpression ast, Object o);
-  public abstract Object visitCaseList(CaseList ast, Object o);
-  public abstract Object visitCase(Case ast, Object o);
-  public abstract Object visitConstantList(ConstantList ast, Object o);
-  public abstract Object visitLiteralExpression(LiteralExpression ast, Object o);
 
   // Expressions
   public abstract Object visitArrayExpression(ArrayExpression ast, Object o);

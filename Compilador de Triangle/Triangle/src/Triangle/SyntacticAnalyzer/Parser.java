@@ -390,21 +390,6 @@ public class Parser {
         expressionAST = new IfExpression(e1AST, e2AST, e3AST, expressionPos);
       }
       break;
-    
-    case Token.MATCH:
-        {
-          acceptIt();
-          Expression exprAST = parseExpression();
-          accept(Token.OF);
-          CaseList caseListAST = parseCaseList();
-          accept(Token.OTHERWISE);
-          accept(Token.COLON);
-          Expression otherwiseAST = parseExpression();
-          accept(Token.END);
-          finish(expressionPos);
-          expressionAST = new MatchExpression(exprAST, caseListAST, otherwiseAST, expressionPos);
-        }
-        break;
 
     default:
       expressionAST = parseSecondaryExpression();
@@ -518,75 +503,7 @@ public class Parser {
   // ############# #############
   // ########## CASE ###########
   // ############# #############
-  
-  CaseList parseCaseList() throws SyntaxError {
-    SourcePosition caseListPos = new SourcePosition();
-    start(caseListPos);
-
-    Case cAST = parseCase();
-    CaseList rest = null;
-    if (currentToken.kind == Token.CASE) {
-      rest = parseCaseList();
-    }
-
-    finish(caseListPos);
-    return new CaseList(cAST, rest, caseListPos);
-  }
-  
-  Case parseCase() throws SyntaxError {
-    SourcePosition casePos = new SourcePosition();
-    start(casePos);
-
-    accept(Token.CASE);
-
-    ConstantList constsAST = parseConstantList();
-
-    accept(Token.COLON);
-    Expression exprAST = parseExpression();
-
-    finish(casePos);
-    return new Case(constsAST, exprAST, casePos);
-  }
-  
-
-  ConstantList parseConstantList() throws SyntaxError {
-    SourcePosition constListPos = new SourcePosition();
-    start(constListPos);
-
-    Expression constAST = parseConstant();
-    ConstantList rest = null;
-
-    if (currentToken.kind == Token.COMMA) {
-      acceptIt();
-      rest = parseConstantList();
-    }
-
-    finish(constListPos);
-    return new ConstantList(constAST, rest, constListPos);
-  }
- 
-  
-  Expression parseConstant() throws SyntaxError {
-    Expression constAST = null;
-
-    if (currentToken.kind == Token.INTLITERAL) {
-      constAST = new LiteralExpression(currentToken.spelling, currentToken.position);
-      acceptIt();
-
-    } else if (currentToken.kind == Token.IDENTIFIER &&
-                 (currentToken.spelling.equals("true") || currentToken.spelling.equals("false"))) {
-      constAST = new LiteralExpression(currentToken.spelling, currentToken.position);
-      acceptIt();
-
-    } else {
-      syntacticError("Expected a constant (integer or boolean)", currentToken.spelling);
-    }
-
-    return constAST;
-  }
-  
-  
-
+    
   RecordAggregate parseRecordAggregate() throws SyntaxError {
     RecordAggregate aggregateAST = null; // in case there's a syntactic error
 
