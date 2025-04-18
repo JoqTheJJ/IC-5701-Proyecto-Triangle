@@ -267,7 +267,7 @@ public class Parser {
         commandPos = new SourcePosition();
         start(commandPos);
 
-        Command cAST = parseSingleCommand();
+        Command cAST = parseCommand();
         accept(Token.UNTIL);
         Expression eAST = parseExpression();
         finish(commandPos);
@@ -310,7 +310,7 @@ public class Parser {
 
         Expression e2AST = parseExpression();
         accept(Token.DO);
-        Command cAST = parseSingleCommand();
+        Command cAST = parseCommand();
         finish(commandPos);
         commandAST = new ForCommand(vAST, e1AST, e2AST, cAST, loopDirection, commandPos);
       }
