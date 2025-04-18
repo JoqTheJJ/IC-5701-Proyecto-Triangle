@@ -14,6 +14,7 @@ import Triangle.AbstractSyntaxTrees.BinaryOperatorDeclaration;
 import Triangle.AbstractSyntaxTrees.BoolTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CallCommand;
 import Triangle.AbstractSyntaxTrees.CallExpression;
+import Triangle.AbstractSyntaxTrees.Case;// Case
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
@@ -26,6 +27,7 @@ import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.Expression;//Expression
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -58,6 +60,9 @@ import Triangle.AbstractSyntaxTrees.ForCommand;
 
 //GetCharCommand
 import Triangle.AbstractSyntaxTrees.GetCharCommand;
+
+//MatchCommand
+import Triangle.AbstractSyntaxTrees.MatchCommand;
 
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
@@ -174,6 +179,24 @@ public class TableVisitor implements Visitor {
       ast.V.visit(this, null);
       return null;
   }
+    
+  //MatchCommand
+public Object visitMatchCommand(MatchCommand ast, Object o) {
+  ast.E.visit(this, null);
+
+  for (Case c : ast.C) {
+    for (Expression e : c.cases) {
+      e.visit(this, null); // ? necesario para resolución de identificadores
+    }
+    c.C.visit(this, null);
+  }
+
+  if (ast.O != null) {
+    ast.O.visit(this, null);
+  }
+
+  return null;
+}
   // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc=" Expressions ">
