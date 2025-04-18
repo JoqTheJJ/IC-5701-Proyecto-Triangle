@@ -363,7 +363,7 @@ public class Parser {
         }
 
         accept(Token.COLON);
-        Command caseCmd = parseCommand();
+        Command caseCmd = parseSingleCommand();
         cases.add(new Case(labels, caseCmd));
       }
 
@@ -371,7 +371,7 @@ public class Parser {
       if (currentToken.kind == Token.OTHERWISE) {
         acceptIt();
         accept(Token.COLON);
-        otherwise = parseCommand();
+        otherwise = parseSingleCommand();
       }
 
       accept(Token.END);
