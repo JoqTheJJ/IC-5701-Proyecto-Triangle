@@ -238,14 +238,16 @@ public final class Encoder implements Visitor {
     List<Integer> jumpToEndAddrs = new ArrayList<>();
 
     ast.E.visit(this, frame);
+    emit(Machine.PUSHop, 0, 0, 1);
+    emit(Machine.STOREop, 1, Machine.STr, 0);
 
     for (Case c : ast.C) {
       List<Integer> labelFailJumps = new ArrayList<>();
 
       for (Expression labelExpr : c.cases) {
-        emit(Machine.LOADop, 1, Machine.STr, -1);
-
+        emit(Machine.LOADop, 1, Machine.STr, 0);
         labelExpr.visit(this, frame);
+
         emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacement);
 
         int jumpIfFalse = nextInstrAddr;
@@ -272,7 +274,7 @@ public final class Encoder implements Visitor {
       patch(addr, nextInstrAddr);
     }
 
-    emit(Machine.POPop, 1, 0, 0);
+    //emit(Machine.POPop, 1, 0, 0);
 
     return null;
   }

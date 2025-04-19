@@ -186,7 +186,7 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
 
   for (Case c : ast.C) {
     for (Expression e : c.cases) {
-      e.visit(this, null); // ? necesario para resolución de identificadores
+      e.visit(this, null); // ???
     }
     c.C.visit(this, null);
   }

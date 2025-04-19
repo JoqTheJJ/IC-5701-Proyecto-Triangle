@@ -143,13 +143,79 @@ public class TreeVisitor implements Visitor {
         return(createQuaternary("For Command", ast.V,ast.E1,ast.E2,ast.C));
     }
     
+    //GetChar
     public Object visitGetCharCommand(GetCharCommand ast, Object o) {
        return createUnary("Get Char Command", ast.V);
     }
     
+    //Match
     public Object visitMatchCommand(MatchCommand ast, Object obj) {
-        return(createBinary("Match Command", ast.E, ast.O));
+        DefaultMutableTreeNode matchNode = new DefaultMutableTreeNode("Match Command");
+
+        matchNode.add((DefaultMutableTreeNode) ast.E.visit(this, null));
+
+        DefaultMutableTreeNode casesNode = new DefaultMutableTreeNode("Cases");
+
+        for (Case c : ast.C) {
+            DefaultMutableTreeNode caseNode = new DefaultMutableTreeNode("Case");
+
+            for (Expression label : c.cases) {
+                caseNode.add((DefaultMutableTreeNode) label.visit(this, null));
+            }
+
+            caseNode.add((DefaultMutableTreeNode) c.C.visit(this, null));
+            casesNode.add(caseNode);
+        }
+
+        matchNode.add(casesNode);
+
+        if (ast.O != null) {
+            matchNode.add((DefaultMutableTreeNode) ast.O.visit(this, null));
+        } else {
+            matchNode.add(createNullary("No otherwise"));
+        }
+
+        return matchNode;
     }
+    
+    /*
+    public Object visitMatchCommand(MatchCommand ast, Object obj) {
+        DefaultMutableTreeNode matchNode = new DefaultMutableTreeNode("Match Command");
+
+        matchNode.add((DefaultMutableTreeNode) ast.E.visit(this, null));
+
+        DefaultMutableTreeNode casesNode = new DefaultMutableTreeNode("Cases");
+        for (Case c : ast.C) {
+            casesNode.add((DefaultMutableTreeNode) c.visit(this, null));
+        }
+        matchNode.add(casesNode);
+
+        if (ast.O != null) {
+            matchNode.add((DefaultMutableTreeNode) ast.O.visit(this, null));
+        } else {
+            matchNode.add(createNullary("No otherwise"));
+        }
+
+        return matchNode;
+    }*/
+    
+    //Case
+    /*
+    public Object visitCase(Case ast, Object obj) {
+        DefaultMutableTreeNode caseNode = new DefaultMutableTreeNode("Case");
+
+        DefaultMutableTreeNode labelsNode = new DefaultMutableTreeNode("Labels");
+        for (Expression label : ast.cases) {
+            labelsNode.add((DefaultMutableTreeNode) label.visit(this, null));
+        }
+
+        DefaultMutableTreeNode commandNode = (DefaultMutableTreeNode) ast.C.visit(this, null);
+
+        caseNode.add(labelsNode);
+        caseNode.add(commandNode);
+
+        return caseNode;
+    }*/
 
     // </editor-fold>
     
