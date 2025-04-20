@@ -260,9 +260,7 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
         int skipCaseAddr = -1;
 
         for (Expression label : c.cases) {
-            emit(Machine.LOADop, 1, Machine.LBr, 0); // carga valor del match
-
-            // Re-evalúa la etiqueta (para comparar)
+            emit(Machine.LOADop, 1, Machine.LBr, 0);
             label.visit(this, frame);
 
             // Comparación
@@ -277,15 +275,12 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
         skipCaseAddr = nextInstrAddr;
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
 
-        // Parchea los saltos de no-match
         for (int addr : skipCaseJumps) {
             patch(addr, nextInstrAddr);
         }
 
-        // Ejecutar bloque del case
         c.C.visit(this, frame);
 
-        // Salto al final del match
         int jumpToEnd = nextInstrAddr;
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
         jumpToEndList.add(jumpToEnd);
@@ -298,7 +293,6 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
         ast.O.visit(this, frame);
     }
 
-    // Parchear todos los saltos al final
     for (int addr : jumpToEndList) {
         patch(addr, nextInstrAddr);
     }
@@ -326,9 +320,9 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
             emit(Machine.LOADop, 1, Machine.STr, frame.size);
             labelExpr.visit(this, frame);
 
-            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacement);
+            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacementMatch);
             int jumpIfFalse = nextInstrAddr;
-            emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, 0);
+            emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, 0);
             labelFailJumps.add(jumpIfFalse);
         }
 
