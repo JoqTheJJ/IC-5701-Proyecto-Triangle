@@ -459,6 +459,52 @@ public class Parser {
         expressionAST = new IfExpression(e1AST, e2AST, e3AST, expressionPos);
       }
       break;
+      
+    case Token.MATCH:
+      acceptIt();
+
+      Expression match;
+      if (currentToken.kind == Token.LPAREN) {
+        accept(Token.LPAREN); // '('
+        match = parseExpression();
+        accept(Token.RPAREN); // ')'
+      } else {
+        match = parseExpression();
+      }
+
+      accept(Token.OF);
+
+      SourcePosition pos = new SourcePosition();
+      start(pos);
+
+      java.util.List<CaseExpression> cases = new java.util.ArrayList<>();
+
+      while (currentToken.kind == Token.CASE) {
+        acceptIt();
+
+        java.util.List<Expression> labels = new java.util.ArrayList<>();
+        labels.add(parseExpression());
+
+        while (currentToken.kind == Token.COMMA) {
+          acceptIt();
+          labels.add(parseExpression());
+        }
+
+        accept(Token.COLON);
+        Expression resultExpr = parseExpression();
+        cases.add(new CaseExpression(labels, resultExpr));
+      }
+
+      accept(Token.OTHERWISE);
+      accept(Token.COLON);
+      Expression otherwiseExpr = parseExpression();
+
+      accept(Token.END);
+      finish(pos);
+
+      expressionAST = new MatchExpression(match, cases, otherwiseExpr, pos);
+      break;
+      
 
     default:
       expressionAST = parseSecondaryExpression();
