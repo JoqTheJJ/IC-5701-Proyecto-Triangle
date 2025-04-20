@@ -362,11 +362,25 @@ public class Interpreter {
         ST = ST - 1;
         data[ST - 1] = toInt(data[ST - 1] > data[ST]);
         break;
+        
+        
+      //Modificado
       case Machine.eqDisplacement:
-        size = data[ST - 1]; // size of each comparand
-        ST = ST - 2 * size;
-        data[ST - 1] = toInt(equal(size, ST - 1, ST - 1 + size));
+        
+        ST = ST - 1;
+        int rhs = data[ST];
+        
+        ST = ST - 1;
+        int lhs = data[ST];
+
+        data[ST] = toInt(lhs == rhs);
+        ST = ST + 1;
         break;
+        
+        
+        
+        
+        
       case Machine.neDisplacement:
         size = data[ST - 1]; // size of each comparand
         ST = ST - 2 * size;
@@ -428,6 +442,18 @@ public class Interpreter {
         break;
       case Machine.disposeDisplacement:
         ST = ST - 1; // no action taken at present
+        break;
+      case Machine.cmpLeDisplacement:
+        ST = ST - 1;
+        char char1 = (char)data[ST - 1];
+        char char2 = (char)data[ST];
+        data[ST - 1] = (char1 <= char2) ? Machine.trueRep : Machine.falseRep;
+        break;
+      case Machine.cmpLtDisplacement:
+        ST = ST - 1;
+        char1 = (char)data[ST - 1]; 
+        char2 = (char)data[ST];
+        data[ST - 1] = (char1 < char2) ? Machine.trueRep : Machine.falseRep;
         break;
     }
   }
