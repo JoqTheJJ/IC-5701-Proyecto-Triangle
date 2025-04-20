@@ -240,6 +240,8 @@ public final class Encoder implements Visitor {
     ast.E.visit(this, frame);
     emit(Machine.PUSHop, 0, 0, 1);
     emit(Machine.STOREop, 1, Machine.STr, 0);
+    
+    System.out.println(" -[  ]- ");
 
     for (Case c : ast.C) {
       List<Integer> labelFailJumps = new ArrayList<>();
