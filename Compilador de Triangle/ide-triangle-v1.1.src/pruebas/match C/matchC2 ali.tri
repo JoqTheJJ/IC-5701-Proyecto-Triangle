@@ -2,7 +2,7 @@ let
   var x: Integer
 in
   begin
-    x := 2;
+    x := 100;
 
     match x of
       case 1: putint(100)

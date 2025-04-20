@@ -363,42 +363,16 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
     return ast.AA.visit(this, o);
   }
 
-public Object visitBinaryExpression(BinaryExpression ast, Object o) {
+  public Object visitBinaryExpression(BinaryExpression ast, Object o) {
     Frame frame = (Frame) o;
-
-    ast.type.visit(this, null); // No usamos su resultado aquí
-
-    ast.E1.visit(this, frame); // E1 = n
-    ast.E2.visit(this, frame); // E2 = 3
-
-    switch (ast.O.spelling) {
-        case "+":
-            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.addDisplacement);
-            break;
-        case "-":
-            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.subDisplacement);
-            break;
-        case "*":
-            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.multDisplacement);
-            break;
-        case "/":
-            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.divDisplacement);
-            break;
-        case "<":
-            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.ltDisplacement);
-            break;
-        case "=":
-            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacement);
-            break;
-        case ">":
-            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.gtDisplacement);
-            break;
-        default:
-            reporter.reportError("Operador no soportado: " + ast.O.spelling, "", ast.position);
-    }
-
-    return new Integer(1); // los operadores binarios retornan 1 palabra
-}
+    Integer valSize = (Integer) ast.type.visit(this, null);
+    int valSize1 = ((Integer) ast.E1.visit(this, frame)).intValue();
+    Frame frame1 = new Frame(frame, valSize1);
+    int valSize2 = ((Integer) ast.E2.visit(this, frame1)).intValue();
+    Frame frame2 = new Frame(frame.level, valSize1 + valSize2);
+    ast.O.visit(this, frame2);
+    return valSize;
+  }
 
 
 
