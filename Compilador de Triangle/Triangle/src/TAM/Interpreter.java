@@ -364,8 +364,11 @@ public class Interpreter {
         break;
         
         
+        
+        
       //Modificado
-      case Machine.eqDisplacement:
+      //match (Expression/Command
+      case Machine.eqDisplacementMatch:
         
         ST = ST - 1;
         int rhs = data[ST];
@@ -376,6 +379,13 @@ public class Interpreter {
         data[ST] = toInt(lhs == rhs);
         ST = ST + 1;
         break;
+        
+      //eq normal
+      case Machine.eqDisplacement:
+        size = data[ST - 1];
+        ST = ST - 2 * size;
+        data[ST - 1] = toInt(equal(size, ST - 1, ST - 1 + size));
+        break; 
         
         
         

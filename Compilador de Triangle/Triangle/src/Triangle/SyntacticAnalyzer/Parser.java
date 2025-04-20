@@ -310,7 +310,7 @@ public class Parser {
 
         Expression e2AST = parseExpression();
         accept(Token.DO);
-        Command cAST = parseCommand();
+        Command cAST = parseSingleCommand();
         finish(commandPos);
         commandAST = new ForCommand(vAST, e1AST, e2AST, cAST, loopDirection, commandPos);
       }
