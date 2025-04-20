@@ -71,10 +71,14 @@ import Triangle.AbstractSyntaxTrees.RepeatCommand;
 import Triangle.AbstractSyntaxTrees.ForCommand;
 //GetCharCommand
 import Triangle.AbstractSyntaxTrees.GetCharCommand;
-//MatchCommand
-import Triangle.AbstractSyntaxTrees.Case;
+//Expression
 import Triangle.AbstractSyntaxTrees.Expression;
+//MatchCommand
 import Triangle.AbstractSyntaxTrees.MatchCommand;
+import Triangle.AbstractSyntaxTrees.Case;
+//MatchExpression
+import Triangle.AbstractSyntaxTrees.MatchExpression;
+import Triangle.AbstractSyntaxTrees.CaseExpression;
 
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
@@ -196,6 +200,51 @@ public class LayoutVisitor implements Visitor {
     });
     attachParent(matchTree, join(matchTree));
     return matchTree;
+  }
+  
+  //MatchExpression
+  public Object visitMatchExpression(MatchExpression ast, Object obj) {
+  DrawingTree matchTree = layoutCaption("MatchExp.");
+
+  DrawingTree exprTree = (DrawingTree) ast.E.visit(this, null);
+
+  List<DrawingTree> caseTrees = new ArrayList<>();
+
+  for (CaseExpression caseExpr : ast.C) {
+    DrawingTree caseTree = layoutCaption("Case");
+
+    List<DrawingTree> labelTrees = new ArrayList<>();
+    for (Expression label : caseExpr.cases) {
+      labelTrees.add((DrawingTree) label.visit(this, null));
+    }
+
+    DrawingTree exprResultTree = (DrawingTree) caseExpr.E.visit(this, null);
+
+    DrawingTree[] children = new DrawingTree[labelTrees.size() + 1];
+    for (int i = 0; i < labelTrees.size(); i++) {
+      children[i] = labelTrees.get(i);
+    }
+    children[labelTrees.size()] = exprResultTree;
+
+    caseTree.setChildren(children);
+    attachParent(caseTree, join(caseTree));
+    caseTrees.add(caseTree);
+  }
+
+  DrawingTree caseListTree = layoutCaption("Cases");
+  caseListTree.setChildren(caseTrees.toArray(new DrawingTree[0]));
+  attachParent(caseListTree, join(caseListTree));
+
+  DrawingTree otherwiseTree = (DrawingTree) ast.O.visit(this, null);
+
+  matchTree.setChildren(new DrawingTree[] {
+    exprTree,
+    caseListTree,
+    otherwiseTree
+  });
+  attachParent(matchTree, join(matchTree));
+
+  return matchTree;
   }
     
   // Expressions

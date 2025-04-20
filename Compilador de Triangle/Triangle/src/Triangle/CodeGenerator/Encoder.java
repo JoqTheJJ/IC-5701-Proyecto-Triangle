@@ -12,6 +12,15 @@
  * of the authors.
  */
 
+
+
+
+
+
+
+
+
+
 package Triangle.CodeGenerator;
 
 import java.io.DataOutputStream;
@@ -101,10 +110,14 @@ import Triangle.AbstractSyntaxTrees.RepeatCommand;
 import Triangle.AbstractSyntaxTrees.ForCommand;
 //GetChar Command
 import Triangle.AbstractSyntaxTrees.GetCharCommand;
-//Match Command
-import Triangle.AbstractSyntaxTrees.Case;
+//Expression Import
 import Triangle.AbstractSyntaxTrees.Expression;
+//Match Command
 import Triangle.AbstractSyntaxTrees.MatchCommand;
+import Triangle.AbstractSyntaxTrees.Case;
+//Match Expression
+import Triangle.AbstractSyntaxTrees.MatchExpression;
+import Triangle.AbstractSyntaxTrees.CaseExpression;
 
 
 public final class Encoder implements Visitor {
@@ -240,8 +253,6 @@ public final class Encoder implements Visitor {
     ast.E.visit(this, frame);
     emit(Machine.PUSHop, 0, 0, 1);
     emit(Machine.STOREop, 1, Machine.STr, 0);
-    
-    System.out.println(" -[  ]- ");
 
     for (Case c : ast.C) {
       List<Integer> labelFailJumps = new ArrayList<>();
@@ -275,12 +286,110 @@ public final class Encoder implements Visitor {
     for (int addr : jumpToEndAddrs) {
       patch(addr, nextInstrAddr);
     }
-
+    
     //emit(Machine.POPop, 1, 0, 0);
 
     return null;
   }
+  
+  //MatchExpression
+  public Object visitMatchExpression(MatchExpression ast, Object o) {
+    Frame frame = (Frame) o;
+    List<Integer> jumpToEndAddrs = new ArrayList<>();
 
+    ast.E.visit(this, frame);
+    emit(Machine.PUSHop, 0, 0, 1);
+    emit(Machine.STOREop, 1, Machine.STr, frame.size);
+
+    for (CaseExpression c : ast.C) {
+        List<Integer> labelFailJumps = new ArrayList<>();
+
+        for (Expression labelExpr : c.cases) {
+            emit(Machine.LOADop, 1, Machine.STr, frame.size);
+            labelExpr.visit(this, frame);
+
+            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacement);
+            int jumpIfFalse = nextInstrAddr;
+            emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, 0);
+            labelFailJumps.add(jumpIfFalse);
+        }
+
+        c.E.visit(this, frame);
+
+        int jumpAfterCase = nextInstrAddr;
+        emit(Machine.JUMPop, 0, Machine.CBr, 0);
+        jumpToEndAddrs.add(jumpAfterCase);
+
+        for (int addr : labelFailJumps) {
+            patch(addr, nextInstrAddr);
+        }
+    }
+
+    ast.O.visit(this, frame);
+    emit(Machine.STOREop, 0, Machine.LBr, frame.size);
+
+    for (int addr : jumpToEndAddrs) {
+        patch(addr, nextInstrAddr);
+    }
+    
+    emit(Machine.LOADop, 0, Machine.LBr, frame.size);
+
+    return null;
+  }
+
+  
+  
+  
+  
+  
+  //MatchExpression
+  /*
+  public Object visitMatchExpression(MatchExpression ast, Object o) {
+    Frame frame = (Frame) o;
+
+    // Inicializar espacio para el resultado
+    emit(Machine.PUSHop, 0, 0, 1); // dummy result
+    emit(Machine.STOREop, 0, Machine.LBr, frame.size); // result
+
+    List<Integer> jumpToEndList = new ArrayList<>();
+
+    for (MatchExpression.Case caseNode : ast.cases) {
+        for (Expression label : caseNode.labels) {
+            ast.target.visit(this, frame);
+
+            label.visit(this, frame);
+
+            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacement);
+
+            int jumpIfFalse = nextInstrAddr;
+            emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, 0);
+
+            caseNode.branch.visit(this, frame);
+            emit(Machine.STOREop, 0, Machine.LBr, frame.size); // guardar resultado
+
+            int jumpEnd = nextInstrAddr;
+            emit(Machine.JUMPop, 0, Machine.CBr, 0);
+            jumpToEndList.add(jumpEnd);
+
+            patch(jumpIfFalse, nextInstrAddr);
+        }
+    }
+
+    ast.otherwise.visit(this, frame);
+    emit(Machine.STOREop, 0, Machine.LBr, frame.size);
+
+    for (int addr : jumpToEndList) {
+        patch(addr, nextInstrAddr);
+    }
+
+    emit(Machine.LOADop, 0, Machine.LBr, frame.size);
+
+    return Integer.valueOf(1);
+}*/
+  
+  
+ 
+  
   
   
   

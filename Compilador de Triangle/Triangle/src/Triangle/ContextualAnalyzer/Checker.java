@@ -157,6 +157,47 @@ public final class Checker implements Visitor {
   return null;
   }
   
+  //MatchExpression 
+  public Object visitMatchExpression(MatchExpression  ast, Object o) {
+    TypeDenoter exprType = (TypeDenoter) ast.E.visit(this, null);
+
+    boolean validType = exprType.equals(StdEnvironment.integerType) ||
+                      exprType.equals(StdEnvironment.booleanType);
+    if (!validType) {
+      reporter.reportError("Match expression must be of type Integer or Boolean", "", ast.E.position);
+    }
+    
+    TypeDenoter resultType = null;
+
+    for (CaseExpression caseExpr : ast.C) {
+      for (Expression label : caseExpr.cases) {
+        TypeDenoter labelType = (TypeDenoter) label.visit(this, null);
+        if (!labelType.equals(exprType)) {
+          reporter.reportError("Case label does not match match expression type", "", label.position);
+        }
+      }
+
+      TypeDenoter caseResult = (TypeDenoter) caseExpr.E.visit(this, null);
+      if (resultType == null) {
+        resultType = caseResult;
+      } else if (!resultType.equals(caseResult)) {
+        reporter.reportError("All case branches must return the same type", "", caseExpr.E.position);
+      }
+    }
+
+    if (ast.O != null) {
+      TypeDenoter otherwiseResult = (TypeDenoter) ast.O.visit(this, null);
+      if (resultType == null) {
+        resultType = otherwiseResult;
+      } else if (!resultType.equals(otherwiseResult)) {
+        reporter.reportError("Otherwise branch must return the same type as the cases", "", ast.O.position);
+      }
+    }
+
+    ast.type = resultType;
+    return resultType;
+  }
+  
   // Expressions
 
   // Returns the TypeDenoter denoting the type of the expression. Does

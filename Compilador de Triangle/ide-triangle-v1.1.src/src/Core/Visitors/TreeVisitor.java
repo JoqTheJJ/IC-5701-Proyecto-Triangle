@@ -14,7 +14,6 @@ import Triangle.AbstractSyntaxTrees.BinaryOperatorDeclaration;
 import Triangle.AbstractSyntaxTrees.BoolTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CallCommand;
 import Triangle.AbstractSyntaxTrees.CallExpression;
-import Triangle.AbstractSyntaxTrees.Case;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
@@ -63,6 +62,11 @@ import Triangle.AbstractSyntaxTrees.GetCharCommand;
 
 //MatchCommand
 import Triangle.AbstractSyntaxTrees.MatchCommand;
+import Triangle.AbstractSyntaxTrees.Case;
+
+//MatchExpression
+import Triangle.AbstractSyntaxTrees.MatchExpression;
+import Triangle.AbstractSyntaxTrees.CaseExpression;
 
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
@@ -148,7 +152,7 @@ public class TreeVisitor implements Visitor {
        return createUnary("Get Char Command", ast.V);
     }
     
-    //Match
+    //MatchCommand
     public Object visitMatchCommand(MatchCommand ast, Object obj) {
         DefaultMutableTreeNode matchNode = new DefaultMutableTreeNode("Match Command");
 
@@ -178,44 +182,33 @@ public class TreeVisitor implements Visitor {
         return matchNode;
     }
     
-    /*
-    public Object visitMatchCommand(MatchCommand ast, Object obj) {
-        DefaultMutableTreeNode matchNode = new DefaultMutableTreeNode("Match Command");
+    //MatchExpression
+    public Object visitMatchExpression(MatchExpression ast, Object obj) {
+        DefaultMutableTreeNode matchNode = new DefaultMutableTreeNode("Match Expression");
 
         matchNode.add((DefaultMutableTreeNode) ast.E.visit(this, null));
 
         DefaultMutableTreeNode casesNode = new DefaultMutableTreeNode("Cases");
-        for (Case c : ast.C) {
-            casesNode.add((DefaultMutableTreeNode) c.visit(this, null));
+
+        for (CaseExpression c : ast.C) {
+            DefaultMutableTreeNode caseNode = new DefaultMutableTreeNode("Case");
+
+            for (Expression label : c.cases) {
+                caseNode.add((DefaultMutableTreeNode) label.visit(this, null));
+            }
+
+            caseNode.add((DefaultMutableTreeNode) c.E.visit(this, null));
+            casesNode.add(caseNode);
         }
+
         matchNode.add(casesNode);
 
-        if (ast.O != null) {
-            matchNode.add((DefaultMutableTreeNode) ast.O.visit(this, null));
-        } else {
-            matchNode.add(createNullary("No otherwise"));
-        }
-
+        matchNode.add((DefaultMutableTreeNode) ast.O.visit(this, null));
+        
         return matchNode;
-    }*/
+    }
     
-    //Case
-    /*
-    public Object visitCase(Case ast, Object obj) {
-        DefaultMutableTreeNode caseNode = new DefaultMutableTreeNode("Case");
-
-        DefaultMutableTreeNode labelsNode = new DefaultMutableTreeNode("Labels");
-        for (Expression label : ast.cases) {
-            labelsNode.add((DefaultMutableTreeNode) label.visit(this, null));
-        }
-
-        DefaultMutableTreeNode commandNode = (DefaultMutableTreeNode) ast.C.visit(this, null);
-
-        caseNode.add(labelsNode);
-        caseNode.add(commandNode);
-
-        return caseNode;
-    }*/
+    
 
     // </editor-fold>
     

@@ -15,6 +15,22 @@
 package Triangle.AbstractSyntaxTrees;
 
 public interface Visitor {
+    
+    
+  //[ Añadido ]
+  // RepeatCommand
+  public abstract Object visitRepeatCommand(RepeatCommand ast, Object o);
+  // FortCommand
+  public abstract Object visitForCommand(ForCommand ast, Object o);
+  // GetCharCommand
+  public abstract Object visitGetCharCommand(GetCharCommand ast, Object o);
+  // MatchCommand
+  public abstract Object visitMatchCommand(MatchCommand ast, Object o);
+  // MatchExpression
+  public abstract Object visitMatchExpression(MatchExpression ast, Object o);
+    
+    
+    
 
   // Commands
   public abstract Object visitAssignCommand(AssignCommand ast, Object o);
@@ -24,16 +40,7 @@ public interface Visitor {
   public abstract Object visitLetCommand(LetCommand ast, Object o);
   public abstract Object visitSequentialCommand(SequentialCommand ast, Object o);
   public abstract Object visitWhileCommand(WhileCommand ast, Object o);
-  // RepeatCommand
-  public abstract Object visitRepeatCommand(RepeatCommand ast, Object o);
-  // FortCommand
-  public abstract Object visitForCommand(ForCommand ast, Object o);
-  //GetCharCommand
-  public abstract Object visitGetCharCommand(GetCharCommand ast, Object o);
-  //Match
-  public abstract Object visitMatchCommand(MatchCommand ast, Object o);
-
-
+  
   // Expressions
   public abstract Object visitArrayExpression(ArrayExpression ast, Object o);
   public abstract Object visitBinaryExpression(BinaryExpression ast, Object o);
