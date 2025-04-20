@@ -322,12 +322,13 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
 
             emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacementMatch);
             int jumpIfFalse = nextInstrAddr;
-            emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, 0);
+            emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, 0);
             labelFailJumps.add(jumpIfFalse);
         }
 
         c.E.visit(this, frame);
-
+        emit(Machine.STOREop, 0, Machine.LBr, frame.size);
+        
         int jumpAfterCase = nextInstrAddr;
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
         jumpToEndAddrs.add(jumpAfterCase);
