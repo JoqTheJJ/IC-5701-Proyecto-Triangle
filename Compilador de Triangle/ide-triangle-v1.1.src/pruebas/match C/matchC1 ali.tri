@@ -2,10 +2,11 @@ let
   var n: Integer
 in
   begin
-    n := 2;
+    n :=2;
     match (n < 3) of
       case true: putint(1)
       case false: putint(0)
+      otherwise: putint(999)
     end;
 
     put(chr(10));

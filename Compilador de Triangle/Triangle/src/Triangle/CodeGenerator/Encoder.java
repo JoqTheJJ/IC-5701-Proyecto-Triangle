@@ -250,9 +250,10 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
     Frame frame = (Frame) o;
     List<Integer> jumpToEndList = new ArrayList<>();
 
-    // ✅ Evalúa la expresión del match UNA SOLA VEZ y guarda el resultado
     ast.E.visit(this, frame);
-    emit(Machine.STOREop, 1, Machine.LBr, 0); // usa 0[LB] como temporal
+    emit(Machine.STOREop, 1, Machine.LBr, 0);
+    emit(Machine.POPop, 0, 0, 0); 
+
 
     for (Case c : ast.C) {
         List<Integer> skipCaseJumps = new ArrayList<>();
@@ -260,12 +261,17 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
 
         for (Expression label : c.cases) {
             emit(Machine.LOADop, 1, Machine.LBr, 0); // carga valor del match
-            label.visit(this, frame);               // evalúa etiqueta del case
-            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacement);
+
+            // Re-evalúa la etiqueta (para comparar)
+            label.visit(this, frame);
+
+            // Comparación
+            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacementMatch);
             int jumpIfFalse = nextInstrAddr;
             emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, 0);
             skipCaseJumps.add(jumpIfFalse);
         }
+
 
         // Si no coincidió ningún label, salta este case
         skipCaseAddr = nextInstrAddr;
@@ -360,18 +366,11 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
 public Object visitBinaryExpression(BinaryExpression ast, Object o) {
     Frame frame = (Frame) o;
 
-    // Paso 1: calcular tamaños (puedes dejarlos como estaban)
-    Integer valSize = (Integer) ast.type.visit(this, null);
-    int valSize1 = ((Integer) ast.E1.visit(this, frame)).intValue();
-    Frame frame1 = new Frame(frame, valSize1);
-    int valSize2 = ((Integer) ast.E2.visit(this, frame1)).intValue();
-    Frame frame2 = new Frame(frame.level, valSize1 + valSize2);
+    ast.type.visit(this, null); // No usamos su resultado aquí
 
-    // ✅ Paso 2: visitar los operandos EN ORDEN CORRECTO para TAM
-    ast.E1.visit(this, frame); // izquierda primero (ej: n)
-    ast.E2.visit(this, frame); // derecha segundo (ej: 3)
+    ast.E1.visit(this, frame); // E1 = n
+    ast.E2.visit(this, frame); // E2 = 3
 
-    // ✅ Paso 3: emitir la operación correspondiente
     switch (ast.O.spelling) {
         case "+":
             emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.addDisplacement);
@@ -394,13 +393,13 @@ public Object visitBinaryExpression(BinaryExpression ast, Object o) {
         case ">":
             emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.gtDisplacement);
             break;
-        // Agrega más operadores si los tienes definidos
         default:
             reporter.reportError("Operador no soportado: " + ast.O.spelling, "", ast.position);
     }
 
-    return valSize;
+    return new Integer(1); // los operadores binarios retornan 1 palabra
 }
+
 
 
 
