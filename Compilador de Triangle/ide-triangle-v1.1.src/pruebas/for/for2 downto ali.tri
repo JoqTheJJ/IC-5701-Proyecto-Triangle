@@ -1,5 +1,0 @@
-let
-  var letra: Char
-in
-  for letra := 'F' downto 'A' do
-    put(letra)

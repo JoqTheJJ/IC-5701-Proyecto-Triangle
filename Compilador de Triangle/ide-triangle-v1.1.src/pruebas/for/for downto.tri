@@ -19,5 +19,4 @@ in
     put('n');
     put('a');
     put('l');
-    put(chr(10))
   end 
