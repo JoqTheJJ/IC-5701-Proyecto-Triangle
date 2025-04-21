@@ -305,10 +305,11 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
 
   
   //MatchExpression
-  public Object visitMatchExpression(MatchExpression ast, Object o) {
+public Object visitMatchExpression(MatchExpression ast, Object o) {
     Frame frame = (Frame) o;
     List<Integer> jumpToEndAddrs = new ArrayList<>();
 
+    // Evaluar la expresión del match una vez y guardarla en la pila
     ast.E.visit(this, frame);
     emit(Machine.PUSHop, 0, 0, 1);
     emit(Machine.STOREop, 1, Machine.STr, frame.size);
@@ -319,16 +320,14 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
         for (Expression labelExpr : c.cases) {
             emit(Machine.LOADop, 1, Machine.STr, frame.size);
             labelExpr.visit(this, frame);
-
             emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacementMatch);
             int jumpIfFalse = nextInstrAddr;
             emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, 0);
             labelFailJumps.add(jumpIfFalse);
         }
 
-        c.E.visit(this, frame);
-        emit(Machine.STOREop, 0, Machine.LBr, frame.size);
-        
+        c.E.visit(this, frame); // Valor que va en la pila si coincide
+
         int jumpAfterCase = nextInstrAddr;
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
         jumpToEndAddrs.add(jumpAfterCase);
@@ -338,17 +337,17 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
         }
     }
 
-    ast.O.visit(this, frame);
-    emit(Machine.STOREop, 0, Machine.LBr, frame.size);
+    // Otherwise
+    if (ast.O != null) {
+        ast.O.visit(this, frame);
+    }
 
     for (int addr : jumpToEndAddrs) {
         patch(addr, nextInstrAddr);
     }
-    
-    emit(Machine.LOADop, 0, Machine.LBr, frame.size);
 
-    return null;
-  }
+    return new Integer(1); // <---------------------------- ESTO ES CLAVE
+}
 
   
    
