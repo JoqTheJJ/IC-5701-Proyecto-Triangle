@@ -292,7 +292,15 @@ public class Parser {
       {
         acceptIt();
         Vname vAST = parseVname();
-        accept(Token.FROM);
+        
+        if (currentToken.kind == Token.FROM) {
+          acceptIt();
+        } else if (currentToken.kind == Token.BECOMES) {
+          acceptIt();
+        } else {
+          syntacticError("Expected FROM or BECOMES(:=)", currentToken.spelling);
+        }
+        
         Expression e1AST = parseExpression();
 
         int loopDirection; // 0 = to, 1 = downto
