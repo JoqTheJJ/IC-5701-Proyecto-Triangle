@@ -254,7 +254,6 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
     emit(Machine.STOREop, 1, Machine.LBr, 0);
     emit(Machine.POPop, 0, 0, 0); 
 
-
     for (Case c : ast.C) {
         List<Integer> skipCaseJumps = new ArrayList<>();
         int skipCaseAddr = -1;
@@ -263,7 +262,6 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
             emit(Machine.LOADop, 1, Machine.LBr, 0);
             label.visit(this, frame);
 
-            // Comparación
             emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacementMatch);
             int jumpIfFalse = nextInstrAddr;
             emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, 0);
@@ -271,7 +269,6 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
         }
 
 
-        // Si no coincidió ningún label, salta este case
         skipCaseAddr = nextInstrAddr;
         emit(Machine.JUMPop, 0, Machine.CBr, 0);
 
@@ -288,7 +285,6 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
         patch(skipCaseAddr, nextInstrAddr);
     }
 
-    // Bloque otherwise si existe
     if (ast.O != null) {
         ast.O.visit(this, frame);
     }
