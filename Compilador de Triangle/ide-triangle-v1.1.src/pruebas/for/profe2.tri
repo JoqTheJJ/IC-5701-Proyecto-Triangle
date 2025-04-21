@@ -1,7 +1,7 @@
 let
-  type fecha ~ 
+  type fecha ~
     record
-      d : Integer;
+      d : Integer,
       m : Integer
     end;
 
