@@ -1,0 +1,5 @@
+let
+  var letra: Char
+in
+  for letra := 'a' to 'z' do
+    put(letra)

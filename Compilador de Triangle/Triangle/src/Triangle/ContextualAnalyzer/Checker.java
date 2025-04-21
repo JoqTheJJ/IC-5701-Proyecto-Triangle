@@ -101,19 +101,23 @@ public final class Checker implements Visitor {
   //ForCommand
   public Object visitForCommand(ForCommand ast, Object o) {
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
-    
+
     if (!ast.V.variable)
         reporter.reportError("Se esperaba una variable como identificador del bucle", "", ast.V.position);
-    else if (!(vType instanceof IntTypeDenoter))
-        reporter.reportError("Se esperaba un tipo entero para la variable de control", "", ast.V.position);
+    else if (!(vType instanceof IntTypeDenoter) && !(vType instanceof CharTypeDenoter))
+        reporter.reportError("Se esperaba un tipo entero o carácter para la variable de control", "", ast.V.position);
 
     TypeDenoter e1Type = (TypeDenoter) ast.E1.visit(this, null);
-    if (!(e1Type instanceof IntTypeDenoter))
-        reporter.reportError("La expresión inicial del bucle debe ser de tipo entero", "", ast.E1.position);
+    if (!(e1Type instanceof IntTypeDenoter) && !(e1Type instanceof CharTypeDenoter))
+        reporter.reportError("La expresión inicial del bucle debe ser de tipo entero o carácter", "", ast.E1.position);
 
     TypeDenoter e2Type = (TypeDenoter) ast.E2.visit(this, null);
-    if (!(e2Type instanceof IntTypeDenoter))
-        reporter.reportError("La expresión final del bucle debe ser de tipo entero", "", ast.E2.position);
+    if (!(e2Type instanceof IntTypeDenoter) && !(e2Type instanceof CharTypeDenoter))
+        reporter.reportError("La expresión final del bucle debe ser de tipo entero o carácter", "", ast.E2.position);
+
+    if (!vType.equals(e1Type) || !vType.equals(e2Type)) {
+        reporter.reportError("Los tipos de la variable de control y los límites deben coincidir", "", ast.position);
+    }
 
     ast.C.visit(this, null);
 
