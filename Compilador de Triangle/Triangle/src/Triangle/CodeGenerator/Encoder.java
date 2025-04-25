@@ -262,7 +262,8 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
             emit(Machine.LOADop, 1, Machine.LBr, 0);
             label.visit(this, frame);
 
-            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacementMatch);
+            emit(Machine.LOADop, 1, Machine.LBr, 0);
+            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacement);
             int jumpIfFalse = nextInstrAddr;
             emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, 0);
             skipCaseJumps.add(jumpIfFalse);
@@ -316,7 +317,8 @@ public Object visitMatchExpression(MatchExpression ast, Object o) {
             ast.E.visit(this, frame);
             labelExpr.visit(this, frame);
             
-            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacementMatch);
+            emit(Machine.LOADop, 1, Machine.LBr, 0);
+            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacement);
             int jumpIfFalse = nextInstrAddr;
             emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, 0);
 
