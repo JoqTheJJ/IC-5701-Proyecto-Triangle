@@ -358,13 +358,9 @@ public class Parser {
       start(pos);
 
       java.util.List<Case> cases = new java.util.ArrayList<>();
-      
-      System.out.println("Inicia cases");
 
       while (currentToken.kind == Token.CASE) {
         acceptIt();
-        
-        System.out.println("Acepta case: " + currentToken.kind);
 
         java.util.List<Expression> labels = new java.util.ArrayList<>();
         labels.add(parseExpression());
@@ -373,8 +369,6 @@ public class Parser {
           acceptIt();
           labels.add(parseExpression());
         }
-        
-        System.out.println("Case aceptado: " + labels);
 
         accept(Token.COLON);
         Command caseCmd = parseSingleCommand();
@@ -387,18 +381,9 @@ public class Parser {
         accept(Token.COLON);
         otherwise = parseSingleCommand();
       }
-
-      System.out.println("Antes END");
+      
       accept(Token.END);
       finish(pos);
-      System.out.println("Despues END");
-      
-      
-      System.out.println("MatchE :" + match);
-      System.out.println("Cases  :" + cases);
-      System.out.println("OtherW :" + otherwise);
-      System.out.println("Pos    :" + pos);
-      
       
       commandAST = new MatchCommand(match, cases, otherwise, pos);
       break;
