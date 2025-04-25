@@ -6,7 +6,4 @@ let
       otherwise: 31
     end
 in
-  begin
-    put(chr(10));
-    putint(diasmes(5))
-  end
+  putint(diasmes(5))
