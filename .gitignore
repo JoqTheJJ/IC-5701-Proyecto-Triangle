@@ -1,12 +1,16 @@
-Compilador de Triangle/ide-triangle-v1.1.src/nbproject/private/private.properties
-Compilador de Triangle/Triangle/nbproject/private/private.properties
-Compilador de Triangle/ide-triangle-v1.1.src/nbproject/private/private.properties
-Compilador de Triangle/Triangle/nbproject/private/private.properties
-Compilador de Triangle/ide-triangle-v1.1.src/nbproject/private/private.properties
+
 /Compilador de Triangle/Triangle/build/
 /Compilador de Triangle/Triangle/dist/
-Compilador de Triangle/ide-triangle-v1.1.src/nbproject/private/private.properties
-Compilador de Triangle/Triangle/nbproject/private/private.properties
-Compilador de Triangle/Triangle/nbproject/private/private.properties
-*.xml
 /Compilador de Triangle/ide-triangle-v1.1.src/build/
+
+
+# Archivos privados de NetBeans
+**/nbproject/private/private.properties
+**/nbproject/private/private.xml
+
+# Directorios de compilación
+**/build/
+**/dist/
+
+# Ignorar archivos XML (opcional)
+*.xml
