@@ -135,7 +135,6 @@ public final class Machine {
     newDisplacement = 27,
     disposeDisplacement = 28,
     cmpLeDisplacement = 29,
-    cmpLtDisplacement = 30,
-    eqDisplacementMatch = 31;
+    cmpLtDisplacement = 30;
 
 }

@@ -318,7 +318,8 @@ public Object visitMatchExpression(MatchExpression ast, Object o) {
             ast.E.visit(this, frame);
             labelExpr.visit(this, frame);
             
-            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacementMatch);
+            emit(Machine.LOADLop, 0, 0, 1); //size
+            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacement);
             int jumpIfFalse = nextInstrAddr;
             emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, 0);
 

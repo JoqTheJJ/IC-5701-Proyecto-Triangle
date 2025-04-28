@@ -362,35 +362,11 @@ public class Interpreter {
         ST = ST - 1;
         data[ST - 1] = toInt(data[ST - 1] > data[ST]);
         break;
-        
-        
-        
-        
-      //Modificado
-      //match (Expression/Command
-      case Machine.eqDisplacementMatch:
-        
-        ST = ST - 1;
-        int rhs = data[ST];
-        
-        ST = ST - 1;
-        int lhs = data[ST];
-
-        data[ST] = toInt(lhs == rhs);
-        ST = ST + 1;
-        break;
-        
-      //eq normal
       case Machine.eqDisplacement:
         size = data[ST - 1];
         ST = ST - 2 * size;
         data[ST - 1] = toInt(equal(size, ST - 1, ST - 1 + size));
         break; 
-        
-        
-        
-        
-        
       case Machine.neDisplacement:
         size = data[ST - 1]; // size of each comparand
         ST = ST - 2 * size;
