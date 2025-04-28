@@ -261,8 +261,10 @@ public Object visitMatchCommand(MatchCommand ast, Object o) {
         for (Expression label : c.cases) {
             emit(Machine.LOADop, 1, Machine.LBr, 0);
             label.visit(this, frame);
-
-            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacementMatch);
+            
+            emit(Machine.LOADLop, 0, 0, 1); //size
+            emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.eqDisplacement);
+            
             int jumpIfFalse = nextInstrAddr;
             emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, 0);
             skipCaseJumps.add(jumpIfFalse);
