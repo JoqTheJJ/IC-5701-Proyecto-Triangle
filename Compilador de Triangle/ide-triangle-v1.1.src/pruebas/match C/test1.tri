@@ -6,11 +6,11 @@ in
     match (n > 3) of
       case true:
         begin
-        putint('T'); putint('r'); putint('u'); putint('e')
+        put('T'); put('r'); put('u'); put('e')
         end
       case false:
         begin
-        putint('F'); putint('a'); putint('l'); putint('s'); putint('e')
+        put('F'); put('a'); put('l'); put('s'); put('e')
         end
     end;
     put(chr(10));
